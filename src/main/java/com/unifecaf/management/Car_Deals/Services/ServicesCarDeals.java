@@ -3,7 +3,6 @@ package com.unifecaf.management.Car_Deals.Services;
 import com.unifecaf.management.Car_Deals.Models.Car;
 import com.unifecaf.management.Car_Deals.Repositories.RepositoryCarDeals;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ServicesCarDeals {
@@ -25,11 +24,8 @@ public class ServicesCarDeals {
         return repositoryCarDeals.findAll();
     }
 
-    public Car saveNewCar(Car car, MultipartFile photoCar) throws Exception {
+    public Car saveNewCar(Car car) {
         // This function saves a new Car object in the database.
-        if (photoCar != null && photoCar.isEmpty()) {
-            car.setPhoto(photoCar.getBytes());
-        }
         return repositoryCarDeals.save(car);
     }
 
@@ -37,4 +33,5 @@ public class ServicesCarDeals {
         // This function deletes a Car by id.
         repositoryCarDeals.deleteById(id);
     }
+
 }

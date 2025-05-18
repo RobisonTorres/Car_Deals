@@ -34,8 +34,8 @@ public class MainController {
         }
 
     @PostMapping("/create_car")
-    public Car createCar(@RequestBody Car car) throws Exception {
-        return servicesCarDeals.saveNewCar(car, null);
+    public Car createCar(@RequestBody Car car) {
+        return servicesCarDeals.saveNewCar(car);
     }
 
     @DeleteMapping("delete_car/{id}")

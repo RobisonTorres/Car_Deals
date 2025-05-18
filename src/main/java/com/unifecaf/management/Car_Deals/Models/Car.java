@@ -11,11 +11,11 @@ public class Car {
     private Integer id;
     private String model;
     private String brand;
-    private Integer fabrication_date;
+    private Integer fabrication;
     private String color;
     private Integer mileage;
     private String plate;
-    private byte[] photo;
+    private Double price;
 
     @Enumerated(EnumType.STRING)
     private CarStatus status;
@@ -24,15 +24,15 @@ public class Car {
 
     }
 
-    public Car(Integer id, String model, String brand, Integer fabrication_date, String color, Integer mileage, String plate, byte[] photo, CarStatus status) {
+    public Car(Integer id, String model, String brand, Integer fabrication, String color, Integer mileage, String plate, Double price, CarStatus status) {
         this.id = id;
         this.model = model;
         this.brand = brand;
-        this.fabrication_date = fabrication_date;
+        this.fabrication = fabrication;
         this.color = color;
         this.mileage = mileage;
         this.plate = plate;
-        this.photo = photo;
+        this.price = price;
         this.status = status;
     }
 
@@ -60,12 +60,12 @@ public class Car {
         this.brand = brand;
     }
 
-    public Integer getFabrication_date() {
-        return fabrication_date;
+    public Integer getFabrication() {
+        return fabrication;
     }
 
-    public void setFabrication_date(Integer fabrication_date) {
-        this.fabrication_date = fabrication_date;
+    public void setFabrication(Integer fabrication) {
+        this.fabrication = fabrication;
     }
 
     public String getColor() {
@@ -92,12 +92,12 @@ public class Car {
         this.plate = plate;
     }
 
-    public byte[] getPhoto() {
-        return photo;
+    public Double getPrice() {
+        return price;
     }
 
-    public void setPhoto(byte[] photo) {
-        this.photo = photo;
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public CarStatus getStatus() {
