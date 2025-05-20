@@ -33,5 +33,4 @@ public class ServicesCarDeals {
         // This function deletes a Car by id.
         repositoryCarDeals.deleteById(id);
     }
-
 }
