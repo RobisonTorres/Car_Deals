@@ -24,7 +24,7 @@ public class ServicesCarDeals {
         return repositoryCarDeals.findAll();
     }
 
-    public Car saveNewCar(Car car) {
+    public Car saveCar(Car car) {
         // This function saves a new Car object in the database.
         return repositoryCarDeals.save(car);
     }

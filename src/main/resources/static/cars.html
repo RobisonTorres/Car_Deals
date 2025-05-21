@@ -7,10 +7,28 @@
 </head>
 <body>
     <h2>All Cars</h2>
-    <button id="getAllCars">Show All Cars</button>
+    <button id="clickMe">Show All Cars</button>
     <button id="addNewCar">New Car</button>
-    <div id="showAllCars"></div> <!-- Rows will be populated here by JavaScript -->
-    <div>
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>Brand</th>
+                        <th>Fabrication Date</th>
+                        <th>Color</th>  
+                        <th>Mileage</th>
+                        <th>Plate</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+            </table>        
+        </div>
+        <div id="showAllCars"></div> <!-- Rows will be populated here by JavaScript -->
+        <div>
         <form id="popForm" style="display: none;">
             <h2>New Car</h2>
             <div>
@@ -58,7 +76,7 @@
     </div>
     <div>
         <form id="popFormUpdate" style="display: none;">
-            <h2>update Car</h2>
+            <h2>Update Car's Info</h2>
             <input type="hidden" id="carId">
             <div>
                 <label for="model_update">Model:</label>

@@ -1,5 +1,6 @@
-package com.unifecaf.management.Car_Deals.Models;
+package com.unifecaf.management.Car_Deals.Dto;
 
+import com.unifecaf.management.Car_Deals.Models.Car;
 import jakarta.persistence.*;
 
 public class CarDto {
@@ -88,5 +89,4 @@ public class CarDto {
     public void setStatus(Car.CarStatus status) {
         this.status = status;
     }
-
 }

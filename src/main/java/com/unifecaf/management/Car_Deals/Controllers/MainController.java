@@ -1,11 +1,12 @@
 package com.unifecaf.management.Car_Deals.Controllers;
 
 import com.unifecaf.management.Car_Deals.Models.Car;
-import com.unifecaf.management.Car_Deals.Models.CarDto;
+import com.unifecaf.management.Car_Deals.Dto.CarDto;
 import com.unifecaf.management.Car_Deals.Services.ServicesCarDeals;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -14,10 +15,11 @@ import org.springframework.web.server.ResponseStatusException;
 public class MainController {
 
     private final ServicesCarDeals servicesCarDeals;
-
-    public MainController(ServicesCarDeals servicesCarDeals) {
+    private final ModelMapper modelMapper;
+    public MainController(ServicesCarDeals servicesCarDeals, ModelMapper modelMapper) {
 
         this.servicesCarDeals = servicesCarDeals;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping("/all_cars")
@@ -35,28 +37,24 @@ public class MainController {
         }
 
     @PostMapping("/create_car")
-    public Car createCar(@RequestBody Car car) {
-        return servicesCarDeals.saveNewCar(car);
+    public ResponseEntity<Car> createCar(@RequestBody Car car) {
+        Car savedCar = servicesCarDeals.saveCar(car);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/update_car/{id}")
-    public Car uptadeCar(@RequestBody CarDto carInfo, @PathVariable Integer id){
+    public ResponseEntity<Void> updateCar(@RequestBody CarDto carInfo, @PathVariable Integer id){
 
         Car car = servicesCarDeals.getCarById(id);
-        car.setModel(carInfo.getModel());
-        car.setBrand(carInfo.getBrand());
-        car.setFabrication(carInfo.getFabrication());
-        car.setColor(carInfo.getColor());
-        car.setMileage(carInfo.getMileage());
-        car.setPlate(carInfo.getPlate());
-        car.setPrice(carInfo.getPrice());
-        car.setStatus(carInfo.getStatus());
-        return servicesCarDeals.saveNewCar(car);
+        modelMapper.map(carInfo, car);
+        servicesCarDeals.saveCar(car);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("delete_car/{id}")
-    public void deleteCar(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteCar(@PathVariable Integer id) {
         servicesCarDeals.deleteCarById(id);
+        return ResponseEntity.ok().build();
     }
 
 }

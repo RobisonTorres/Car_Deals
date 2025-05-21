@@ -1,14 +1,28 @@
-document.getElementById('getAllCars').addEventListener('click', showAllCars);
-
+document.getElementById('clickMe').addEventListener('click', allCarsOption);
 document.getElementById('addNewCar').addEventListener('click', displayForm);
 document.getElementById('closeForm').addEventListener('click', closeForm);
-
 document.getElementById('closeFormUpdate').addEventListener('click', closeFormUpdate);
+
+function allCarsOption () {
+    
+    // This function is called when the "Show All Cars" button is clicked. It toggles
+    // the display of all cars by calling the showAllCars() or hideAllCars() function.
+    const titleEnum = Object.freeze({show: "Show All Cars",  hide: "Hide All Cars"});
+    const button = document.getElementById('clickMe');
+    if (button.innerHTML === titleEnum.show) {
+        button.innerHTML = titleEnum.hide;
+        showAllCars();
+    } else {
+        button.innerHTML = titleEnum.show;
+        hideAllCars();
+    }
+}
 
 function displayForm() {
 
     // This function is called when the "Add New Car" button is clicked. It displays the form
     // for adding a new car by changing the display style of the form element.
+    closeFormUpdate(event);
     const form = document.getElementById('popForm');
     return form.style.display = 'block';
 }
@@ -26,6 +40,7 @@ function displayFormUpdate() {
 
     // This function is called when the "edit" button is clicked. It displays the form
     // for editing a car by changing the display style of the form element.
+    closeForm(event);
     const form = document.getElementById('popFormUpdate');
     return form.style.display = 'block';
 }
@@ -87,22 +102,7 @@ function showAllCars() {
     .then(response => response.json())
     .then(data => {
         let output = `
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>Model</th>
-                        <th>Brand</th>
-                        <th>Fabrication Date</th>
-                        <th>Color</th>  
-                        <th>Mileage</th>
-                        <th>Plate</th>
-                        <th>Price</th>
-                        <th>Status</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <tbody>
         `;
         data.forEach(car => {
             output += `
@@ -136,8 +136,17 @@ function showAllCars() {
     });
 }
 
+function hideAllCars() {
+
+    // This function hides the table of cars by setting its inner HTML to an empty string.
+    document.getElementById('showAllCars').innerHTML = '';
+}
+
 function editCarLoad(carId) {
 
+    // This function is called when the "Edit" button is clicked. It fetches the car data
+    // from the server and populates the form fields with the car's current data.
+    // It also displays the form for editing the car.
     displayFormUpdate();
     carId = parseInt(carId, 10);
     fetch(`http://localhost:8080/cars/get_car/${carId}`, {
