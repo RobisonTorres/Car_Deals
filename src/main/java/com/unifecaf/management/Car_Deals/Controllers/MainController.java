@@ -1,5 +1,7 @@
 package com.unifecaf.management.Car_Deals.Controllers;
 
+import com.unifecaf.management.Car_Deals.Models.Brand;
+import com.unifecaf.management.Car_Deals.Models.BrandCarWrapper;
 import com.unifecaf.management.Car_Deals.Models.Car;
 import com.unifecaf.management.Car_Deals.Dto.CarDto;
 import com.unifecaf.management.Car_Deals.Services.ServicesCarDeals;
@@ -37,8 +39,21 @@ public class MainController {
         }
 
     @PostMapping("/create_car")
-    public ResponseEntity<Car> createCar(@RequestBody Car car) {
-        Car savedCar = servicesCarDeals.saveCar(car);
+    public ResponseEntity<Car> createCar(@RequestBody BrandCarWrapper brandCarWrapper) {
+
+        Brand brand = brandCarWrapper.getBrand();
+        String brand_name = brand.getName();
+        Brand newBrand = new Brand();
+        newBrand.setName(brand_name);
+
+        Car car = brandCarWrapper.getCar();
+
+        if (!servicesCarDeals.checkExistingBrand(brand_name)){
+            servicesCarDeals.saveBrand(newBrand);
+            car.setBrand(newBrand);
+        }
+
+        servicesCarDeals.saveCar(car);
         return ResponseEntity.ok().build();
     }
 
@@ -57,4 +72,8 @@ public class MainController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("all_brands")
+    public Iterable<Brand> getAllBrands() {
+        return servicesCarDeals.getAllCarsBrands();
+    }
 }

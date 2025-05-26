@@ -1,6 +1,8 @@
 package com.unifecaf.management.Car_Deals.Services;
 
+import com.unifecaf.management.Car_Deals.Models.Brand;
 import com.unifecaf.management.Car_Deals.Models.Car;
+import com.unifecaf.management.Car_Deals.Repositories.RepositoryBrand;
 import com.unifecaf.management.Car_Deals.Repositories.RepositoryCarDeals;
 import org.springframework.stereotype.Service;
 
@@ -8,10 +10,13 @@ import org.springframework.stereotype.Service;
 public class ServicesCarDeals {
 
     private final RepositoryCarDeals repositoryCarDeals;
+    private final RepositoryBrand repositoryBrand;
 
-    public ServicesCarDeals(RepositoryCarDeals repositoryCarDeals) {
+    public ServicesCarDeals(RepositoryCarDeals repositoryCarDeals,
+                            RepositoryBrand repositoryBrand) {
 
         this.repositoryCarDeals = repositoryCarDeals;
+        this.repositoryBrand = repositoryBrand;
     }
 
     public Car getCarById(Integer id) {
@@ -32,5 +37,25 @@ public class ServicesCarDeals {
     public void deleteCarById(Integer id) {
         // This function deletes a Car by id.
         repositoryCarDeals.deleteById(id);
+    }
+
+    public Iterable<Brand> getAllCarsBrands() {
+        // This function
+        return repositoryBrand.findAll();
+    }
+
+    public boolean checkExistingBrand(String brand) {
+        // This function...
+        return repositoryBrand.findByName(brand).isPresent();
+    }
+
+    public Brand getBrandById(Integer id) {
+        // This function...
+        return repositoryBrand.findById(id).orElse(null);
+    }
+
+    public Brand saveBrand(Brand brand) {
+        // This function
+        return repositoryBrand.save(brand);
     }
 }

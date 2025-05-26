@@ -13,8 +13,8 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Model</th>
                         <th>Brand</th>
+                        <th>Model</th>
                         <th>Fabrication Date</th>
                         <th>Color</th>  
                         <th>Mileage</th>
@@ -32,12 +32,15 @@
         <form id="popForm" style="display: none;">
             <h2>New Car</h2>
             <div>
-                <label for="model"> Model:</label>
-                <input type="text" id="model">
+                <label for="brand">Brand:</label>
+                <select id="brand" name="brand" onchange="addNewBrand(event)">
+                    <option value="">-- Select Brand --</option>
+                </select>
+                <input type="text" id="brandNew" name="brandNew" placeholder="Enter new brand" style="display: none;">
             </div>
             <div>
-                <label for="brand">Brand:</label>
-                <input type="text" id="brand">
+                <label for="model"> Model:</label>
+                <input type="text" id="model">
             </div>
             <div>
                 <label for="fabrication">Fabrication date:</label>
@@ -63,9 +66,9 @@
                 <label for="status">Status:</label>
                 <select id="status" name="status">
                     <option value="">-- Select Status --</option>
-                    <option value="AVAILABLE">AVAILABLE</option>
-                    <option value="SOLD">SOLD</option>
-                    <option value="UNDER_MAINTENANCE">UNDER_MAINTENANCE</option>
+                    <option value="">-- Select Status --</option>
+                    <option value="NEW">NEW</option>
+                    <option value="SECOND_HAND">SECOND_HAND</option>
                 </select>
             </div>
             <div>
@@ -79,12 +82,15 @@
             <h2>Update Car's Info</h2>
             <input type="hidden" id="carId">
             <div>
-                <label for="model_update">Model:</label>
-                <input type="text" id="model_update">
+                <label for="brand_update">Brand:</label>
+                <select id="brand_update" name="brand_update" onchange="addNewBrand(event)">
+                    <option value="">-- Select Brand --</option>
+                </select>
+                <input type="text" id="brandUpdate" name="brandUpdate" placeholder="Update brand" style="display: none;">
             </div>
             <div>
-                <label for="brand_update">Brand:</label>
-                <input type="text" id="brand_update">
+                <label for="model_update">Model:</label>
+                <input type="text" id="model_update">
             </div>
             <div>
                 <label for="fabrication_update">Fabrication date:</label>
@@ -110,9 +116,8 @@
                 <label for="status_update">Status:</label>
                 <select id="status_update" name="status">
                     <option value="">-- Select Status --</option>
-                    <option value="AVAILABLE">AVAILABLE</option>
-                    <option value="SOLD">SOLD</option>
-                    <option value="UNDER_MAINTENANCE">UNDER_MAINTENANCE</option>
+                    <option value="NEW">NEW</option>
+                    <option value="SECOND_HAND">SECOND_HAND</option>
                 </select>
             </div>
             <div>

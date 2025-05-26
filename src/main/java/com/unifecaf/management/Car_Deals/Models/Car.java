@@ -10,30 +10,32 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String model;
-    private String brand;
     private Integer fabrication;
     private String color;
     private Integer mileage;
     private String plate;
     private Double price;
-
     @Enumerated(EnumType.STRING)
     private CarStatus status;
+
+    @ManyToOne
+    @JoinColumn(name = "brand_id", nullable = false)
+    private Brand brand;
 
     public Car() {
 
     }
 
-    public Car(Integer id, String model, String brand, Integer fabrication, String color, Integer mileage, String plate, Double price, CarStatus status) {
+    public Car(Integer id, String model, Integer fabrication, String color, Integer mileage, String plate, Double price, CarStatus status, Brand brand) {
         this.id = id;
         this.model = model;
-        this.brand = brand;
         this.fabrication = fabrication;
         this.color = color;
         this.mileage = mileage;
         this.plate = plate;
         this.price = price;
         this.status = status;
+        this.brand = brand;
     }
 
     public Integer getId() {
@@ -50,14 +52,6 @@ public class Car {
 
     public void setModel(String model) {
         this.model = model;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
     }
 
     public Integer getFabrication() {
@@ -108,7 +102,15 @@ public class Car {
         this.status = status;
     }
 
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
+    }
+
     public enum CarStatus {
-        AVAILABLE, SOLD, UNDER_MAINTENANCE
+        NEW, SECOND_HAND
     }
 }
