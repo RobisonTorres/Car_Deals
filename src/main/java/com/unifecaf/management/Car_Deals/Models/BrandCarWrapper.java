@@ -24,4 +24,5 @@ public class BrandCarWrapper {
     public void setCar(Car car) {
         this.car = car;
     }
+
 }

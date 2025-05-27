@@ -1,5 +1,7 @@
 package com.unifecaf.management.Car_Deals.Controllers;
 
+import com.unifecaf.management.Car_Deals.Dto.BCWrapperDto;
+import com.unifecaf.management.Car_Deals.Dto.BrandDto;
 import com.unifecaf.management.Car_Deals.Models.Brand;
 import com.unifecaf.management.Car_Deals.Models.BrandCarWrapper;
 import com.unifecaf.management.Car_Deals.Models.Car;
@@ -36,7 +38,7 @@ public class MainController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         return car;
-        }
+    }
 
     @PostMapping("/create_car")
     public ResponseEntity<Car> createCar(@RequestBody BrandCarWrapper brandCarWrapper) {
@@ -51,6 +53,8 @@ public class MainController {
         if (!servicesCarDeals.checkExistingBrand(brand_name)){
             servicesCarDeals.saveBrand(newBrand);
             car.setBrand(newBrand);
+        } else {
+            car.setBrand(brand);
         }
 
         servicesCarDeals.saveCar(car);
@@ -58,10 +62,26 @@ public class MainController {
     }
 
     @PutMapping("/update_car/{id}")
-    public ResponseEntity<Void> updateCar(@RequestBody CarDto carInfo, @PathVariable Integer id){
+    public ResponseEntity<Void> updateCar(@RequestBody BCWrapperDto bcWrapperDto, @PathVariable Integer id){
 
+        CarDto carInfo = bcWrapperDto.getCarDto();
         Car car = servicesCarDeals.getCarById(id);
         modelMapper.map(carInfo, car);
+
+        BrandDto brandInfo = bcWrapperDto.getBrandDto();
+        String brand_name = brandInfo.getName();
+        Brand newBrand = new Brand();
+        newBrand.setName(brand_name);
+
+        if (!servicesCarDeals.checkExistingBrand(brand_name)){
+            servicesCarDeals.saveBrand(newBrand);
+            car.setBrand(newBrand);
+        } else {
+            Integer brand_id = brandInfo.getId();
+            Brand brand = servicesCarDeals.getBrandById(brand_id);
+            modelMapper.map(brandInfo, brand);
+            car.setBrand(brand);
+        }
         servicesCarDeals.saveCar(car);
         return ResponseEntity.ok().build();
     }

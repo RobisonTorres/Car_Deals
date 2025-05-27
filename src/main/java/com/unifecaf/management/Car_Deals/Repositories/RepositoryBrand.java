@@ -8,5 +8,4 @@ import java.util.Optional;
 public interface RepositoryBrand extends JpaRepository<Brand, Integer> {
 
     Optional<Brand> findByName(String name);
-
 }

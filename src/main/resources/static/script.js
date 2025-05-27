@@ -71,6 +71,7 @@ function createCar(event) {
         brandInput = document.getElementById('brandNew').value;
     }
     const brand = {
+        id: parseInt(brandSelect.options[brandSelect.selectedIndex].value, 10),
         name: brandInput
     }
     const car = {
@@ -80,13 +81,12 @@ function createCar(event) {
         mileage: parseInt(document.getElementById('mileage').value, 10),
         plate: document.getElementById('plate').value,
         price: document.getElementById('price').value,
-        status: document.getElementById('status').value,
-        brand_id: brandSelect.value
+        status: document.getElementById('status').value
     };
     const brandCarWrapper = {
         brand: brand,
         car: car
-    };    
+    }; 
     fetch('http://localhost:8080/cars/create_car', {
         method: 'POST',
         headers: {
@@ -99,7 +99,7 @@ function createCar(event) {
             alert('Car created successfully!');
             document.querySelector('form').reset();
             closeForm(event);
-            location.reload(true);
+            showAllCars();
         } else {
             alert('Failed to create car.');
         }
@@ -177,10 +177,8 @@ function editCarLoad(carId) {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
     })
-    .then(response => response.json())//.then(car => { console.log(car.brand.id)});
-    
+    .then(response => response.json())    
     .then(car => {
-
         let brandSelect = car.brand.id;
         document.getElementById('brand_update').value = brandSelect;
         document.getElementById('model_update').value = car.model;
@@ -202,9 +200,17 @@ function updateCar(event) {
     // This function takes the updated data from the form, constructs a car object, 
     // and sends it to the server to update the car with the specified ID.    
     event.preventDefault();
+    let brandSelect = document.getElementById('brand_update');
+    let brandInput = brandSelect.options[brandSelect.selectedIndex].text;
+    if (brandInput === 'Other') {
+        brandInput = document.getElementById('brandUpdate').value;
+    }
+    const brand = {
+        id: parseInt(document.getElementById('brand_update').value, 10),
+        name: brandInput
+    }
     const car = {
         id: document.getElementById('carId').value,
-        brand: document.getElementById('brand_update').value,
         model: document.getElementById('model_update').value,
         fabrication: parseInt(document.getElementById('fabrication_update').value, 10),
         color: document.getElementById('color_update').value,
@@ -213,12 +219,17 @@ function updateCar(event) {
         price: document.getElementById('price_update').value,
         status: document.getElementById('status_update').value
     };
+
+    const brandCarWrapperUpdate = {
+        brandDto: brand,
+        carDto: car
+    };   
     fetch(`http://localhost:8080/cars/update_car/${car.id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(car)
+        body: JSON.stringify(brandCarWrapperUpdate)
     })
     .then(response => {
         if (response.ok) {

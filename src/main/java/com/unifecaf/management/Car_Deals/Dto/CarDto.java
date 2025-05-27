@@ -1,22 +1,16 @@
 package com.unifecaf.management.Car_Deals.Dto;
 
-import com.unifecaf.management.Car_Deals.Models.Car;
-import jakarta.persistence.*;
-
 public class CarDto {
 
-    @Id
     private Integer id;
     private String model;
-    private String brand;
     private Integer fabrication;
     private String color;
     private Integer mileage;
     private String plate;
     private Double price;
-
-    @Enumerated(EnumType.STRING)
-    private Car.CarStatus status;
+    private String status;
+    private Integer brand_id;
 
     public Integer getId() {
         return id;
@@ -32,14 +26,6 @@ public class CarDto {
 
     public void setModel(String model) {
         this.model = model;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
     }
 
     public Integer getFabrication() {
@@ -82,11 +68,19 @@ public class CarDto {
         this.price = price;
     }
 
-    public Car.CarStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Car.CarStatus status) {
+    public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Integer getBrand_id() {
+        return brand_id;
+    }
+
+    public void setBrand_id(Integer brand_id) {
+        this.brand_id = brand_id;
     }
 }
