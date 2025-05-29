@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/cars")
 @CrossOrigin(origins = "*")
@@ -92,8 +94,27 @@ public class MainController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("all_brands")
+    @GetMapping("/all_brands")
     public Iterable<Brand> getAllBrands() {
         return servicesCarDeals.getAllCarsBrands();
+    }
+
+    @GetMapping("/filter_brand/{brand}")
+    public Iterable<Car> findAllCarsByBrand(@PathVariable Brand brand) {
+        return servicesCarDeals.findAllByBrand(brand);
+    }
+
+    @GetMapping("/filter_model/{model}")
+    public Iterable<Car> findAllCarsByModel(@PathVariable String model) {
+        return servicesCarDeals.findAllByModel(model);
+    }
+
+    @GetMapping("/filter_cars")
+    public List<Car> filterCars(
+            @RequestParam Brand brand,
+            @RequestParam String model,
+            @RequestParam Car.CarStatus status
+    ) {
+        return servicesCarDeals.filterCars(brand, model, status);
     }
 }

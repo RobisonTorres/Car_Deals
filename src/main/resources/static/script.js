@@ -25,7 +25,7 @@ function displayForm() {
     closeFormUpdate(event);
     const input = document.getElementById('brand');
     if (input.options.length <= 1) {
-        brandSelectBrand(input);
+        brandSelect(input);
     }
     const form = document.getElementById('popForm');
     return form.style.display = 'block';
@@ -99,7 +99,7 @@ function createCar(event) {
             alert('Car created successfully!');
             document.querySelector('form').reset();
             closeForm(event);
-            showAllCars();
+            location.reload(true);
         } else {
             alert('Failed to create car.');
         }
@@ -170,7 +170,7 @@ function editCarLoad(carId) {
     const input = document.getElementById('brand_update');
     if (input.options.length <= 1) {
         // If the brand selection input is empty, it fetches the available brands.
-        brandSelectBrand(input);
+        brandSelect(input);
     }
     carId = parseInt(carId, 10);
     fetch(`http://localhost:8080/cars/get_car/${carId}`, {
@@ -204,11 +204,11 @@ function updateCar(event) {
     let brandInput = brandSelect.options[brandSelect.selectedIndex].text;
     if (brandInput === 'Other') {
         brandInput = document.getElementById('brandUpdate').value;
-    }
+    };
     const brand = {
         id: parseInt(document.getElementById('brand_update').value, 10),
         name: brandInput
-    }
+    };
     const car = {
         id: document.getElementById('carId').value,
         model: document.getElementById('model_update').value,
@@ -219,7 +219,6 @@ function updateCar(event) {
         price: document.getElementById('price_update').value,
         status: document.getElementById('status_update').value
     };
-
     const brandCarWrapperUpdate = {
         brandDto: brand,
         carDto: car
@@ -267,9 +266,7 @@ function deleteCar(carId) {
     });
 }
 
-
-//const brandInput = document.getElementById('brand_update');
-function brandSelectBrand(brandInput) {
+function brandSelect(brandInput) {
 
     // This function fetches all car brands from the server and populates the brand selection input
     // with the available brands. It also adds an "Other" option to allow users to enter a new brand.
@@ -285,10 +282,12 @@ function brandSelectBrand(brandInput) {
             newOption.text = brand.name;
             brandInput.appendChild(newOption);
         });
-        const newOption = document.createElement('option');
-        newOption.value = 'Other';
-        newOption.text = 'Other';   
-        brandInput.appendChild(newOption);
+        if (brandInput != filter_brand) {
+            const newOption = document.createElement('option');
+            newOption.value = 'Other';
+            newOption.text = 'Other';   
+            brandInput.appendChild(newOption);
+        }
     })
 }
 
@@ -299,7 +298,6 @@ function addNewBrand(event) {
     const select = event.target;
     const brandNewInput = document.getElementById('brandNew');
     const brandUpdateInput = document.getElementById('brandUpdate');
-
     if (select.value === 'Other') {
         brandNewInput.style.display = 'block';
         brandUpdateInput.style.display = 'block';
@@ -307,4 +305,93 @@ function addNewBrand(event) {
         brandNewInput.style.display = 'none';
         brandNewInput.style.display = 'none';
     }
+}
+
+document.getElementById('filter_brand').addEventListener('change', modelSelect);
+function modelSelect() {
+
+    // This function is called when the brand selection input changes. It fetches the models
+    // associated with the selected brand and populates the model selection input with the available models.
+    const select = document.getElementById('filter_model');
+    select.innerHTML = `<option value="" disabled selected hidden>Model</option>`;
+    const brandId = document.getElementById('filter_brand').value;
+
+    fetch(`http://localhost:8080/cars/filter_brand/${brandId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const models = new Set();
+        data.forEach(car => {
+            if (!models.has(car.model)) {
+                models.add(car.model);
+                const option = document.createElement('option');
+                option.value = car.model;
+                option.text = car.model;
+                select.appendChild(option);
+            }
+        });
+    });
+}
+
+function filterCars(event) {
+
+    // This function is called when the "Filter Cars" button is clicked. It collects the filter criteria
+    // from the form fields and sends a GET request to the server to filter the cars based on the criteria.
+    const brand = document.getElementById('filter_brand').value;
+    const model = document.getElementById('filter_model').value;
+    const status = document.getElementById('filter_status').value;
+    event.preventDefault();
+    if (!brand || !model || !status) {
+        alert('Please select all filter criteria.');
+        return;
+    }
+    fetch(`http://localhost:8080/cars/filter_cars?brand=${brand}&model=${model}&status=${status}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        let output = `
+            <tbody>
+        `;
+        data.forEach(car => {
+            output += `
+                <tr id="car-${car.id}">
+                    <td>${car.brand.name}</td>
+                    <td>${car.model}</td>
+                    <td>${car.fabrication ?? 'N/A'}</td>
+                    <td>${car.color}</td>
+                    <td>${car.mileage} km</td>
+                    <td>${car.plate}</td>
+                    <td>$${car.price}</td>
+                    <td>${car.status}</td>
+                    <td>
+                         <button class="edit-btn" id="editCar" onclick="editCarLoad(${car.id})">Edit</button>
+                    </td>
+                    <td>
+                        <button class="delete-btn" onclick="deleteCar(${car.id})">Delete</button>
+                    </td>
+                </tr>
+            `;
+        });
+        output += `
+                </tbody>
+            </table>
+        `;
+        document.getElementById('showAllCarsFiltered').innerHTML = output;
+    }).catch(error => {
+        console.error('Error filtering cars:', error);
+        document.getElementById('showAllCarsFiltered').innerHTML = '<p>Error loading filtered cars.</p>';
+    } );
+}
+
+document.getElementById('hideFilterResult').addEventListener('click', hideFiltersCars);
+function hideFiltersCars(event) {
+
+    // This function hides the table of filtered cars by setting its inner HTML to an empty string.
+    event.preventDefault();
+    document.querySelector('form').reset();
+    document.getElementById('showAllCarsFiltered').innerHTML = '';
 }

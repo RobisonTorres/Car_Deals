@@ -6,6 +6,8 @@ import com.unifecaf.management.Car_Deals.Repositories.RepositoryBrand;
 import com.unifecaf.management.Car_Deals.Repositories.RepositoryCarDeals;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ServicesCarDeals {
 
@@ -55,8 +57,22 @@ public class ServicesCarDeals {
     }
 
     public Brand saveBrand(Brand brand) {
-        // This function
+        // This function...
         return repositoryBrand.save(brand);
     }
 
+    public Iterable<Car> findAllByBrand(Brand brand) {
+        // This function...
+        return repositoryCarDeals.findByBrand(brand);
+    }
+
+    public Iterable<Car> findAllByModel(String model) {
+        // This function...
+        return repositoryCarDeals.findByModel(model);
+    }
+
+    public List<Car> filterCars(Brand brand, String model, Car.CarStatus status) {
+
+        return repositoryCarDeals.findCarsByFilters(brand, model, status);
+    }
 }
