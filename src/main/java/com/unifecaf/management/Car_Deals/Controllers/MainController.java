@@ -3,16 +3,15 @@ package com.unifecaf.management.Car_Deals.Controllers;
 import com.unifecaf.management.Car_Deals.Dto.BCWrapperDto;
 import com.unifecaf.management.Car_Deals.Dto.BrandDto;
 import com.unifecaf.management.Car_Deals.Models.Brand;
-import com.unifecaf.management.Car_Deals.Models.BrandCarWrapper;
 import com.unifecaf.management.Car_Deals.Models.Car;
 import com.unifecaf.management.Car_Deals.Dto.CarDto;
 import com.unifecaf.management.Car_Deals.Services.ServicesCarDeals;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 
 @RestController
@@ -43,47 +42,41 @@ public class MainController {
     }
 
     @PostMapping("/create_car")
-    public ResponseEntity<Car> createCar(@RequestBody BrandCarWrapper brandCarWrapper) {
+    public ResponseEntity<Car> createCar(@Valid @RequestBody BCWrapperDto bcWrapperDto) {
 
-        Brand brand = brandCarWrapper.getBrand();
-        String brand_name = brand.getName();
-        Brand newBrand = new Brand();
-        newBrand.setName(brand_name);
+        Car car = new Car();
+        CarDto carDto = bcWrapperDto.getCarDto();
+        modelMapper.map(carDto, car);
 
-        Car car = brandCarWrapper.getCar();
+        Brand brand = new Brand();
+        BrandDto brandDto = bcWrapperDto.getBrandDto();
+        modelMapper.map(brandDto, brand);
 
-        if (!servicesCarDeals.checkExistingBrand(brand_name)){
-            servicesCarDeals.saveBrand(newBrand);
-            car.setBrand(newBrand);
-        } else {
-            car.setBrand(brand);
+        if (!servicesCarDeals.checkExistingBrand(brand.getName())){
+            servicesCarDeals.saveBrand(brand);
         }
 
+        car.setBrand(brand);
         servicesCarDeals.saveCar(car);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/update_car/{id}")
-    public ResponseEntity<Void> updateCar(@RequestBody BCWrapperDto bcWrapperDto, @PathVariable Integer id){
+    public ResponseEntity<Void> updateCar(@Valid @RequestBody BCWrapperDto bcWrapperDto, @PathVariable Integer id){
 
-        CarDto carInfo = bcWrapperDto.getCarDto();
         Car car = servicesCarDeals.getCarById(id);
-        modelMapper.map(carInfo, car);
+        CarDto carDto = bcWrapperDto.getCarDto();
+        modelMapper.map(carDto, car);
 
-        BrandDto brandInfo = bcWrapperDto.getBrandDto();
-        String brand_name = brandInfo.getName();
-        Brand newBrand = new Brand();
-        newBrand.setName(brand_name);
+        Brand brand = new Brand();
+        BrandDto brandDto = bcWrapperDto.getBrandDto();
+        modelMapper.map(brandDto, brand);
 
-        if (!servicesCarDeals.checkExistingBrand(brand_name)){
-            servicesCarDeals.saveBrand(newBrand);
-            car.setBrand(newBrand);
-        } else {
-            Integer brand_id = brandInfo.getId();
-            Brand brand = servicesCarDeals.getBrandById(brand_id);
-            modelMapper.map(brandInfo, brand);
-            car.setBrand(brand);
+        if (!servicesCarDeals.checkExistingBrand(brand.getName())){
+            servicesCarDeals.saveBrand(brand);
         }
+
+        car.setBrand(brand);
         servicesCarDeals.saveCar(car);
         return ResponseEntity.ok().build();
     }
@@ -117,4 +110,5 @@ public class MainController {
     ) {
         return servicesCarDeals.filterCars(brand, model, status);
     }
+
 }

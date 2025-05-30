@@ -1,24 +1,40 @@
 package com.unifecaf.management.Car_Deals.Dto;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 public class CarDto {
 
-    private Integer id;
+    @Valid
+
+    @NotEmpty(message = "model is mandatory")
+    @NotBlank(message = "model is mandatory")
     private String model;
+
+    @NotNull(message = "fabrication year is mandatory")
     private Integer fabrication;
+
+    @NotEmpty(message = "color is mandatory")
+    @NotBlank(message = "color is mandatory")
     private String color;
+
+    @NotNull(message = "mileage is mandatory")
     private Integer mileage;
+
+    @NotEmpty(message = "plate is mandatory")
+    @NotBlank(message = "plate is mandatory")
     private String plate;
+
+    @NotNull(message = "price is mandatory")
     private Double price;
+
+    @NotEmpty(message = "status is mandatory")
+    @NotBlank(message = "status is mandatory")
     private String status;
+
     private Integer brand_id;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getModel() {
         return model;

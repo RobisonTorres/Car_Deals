@@ -83,16 +83,16 @@ function createCar(event) {
         price: document.getElementById('price').value,
         status: document.getElementById('status').value
     };
-    const brandCarWrapper = {
-        brand: brand,
-        car: car
+    const bcWrapperDtoCreate = {
+        brandDto: brand,
+        carDto: car
     }; 
     fetch('http://localhost:8080/cars/create_car', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(brandCarWrapper)
+        body: JSON.stringify(bcWrapperDtoCreate)
     })
     .then(response => {
         if (response.ok) {
@@ -235,6 +235,7 @@ function updateCar(event) {
             alert('Car updated successfully!');
             document.querySelector('form').reset();
             closeFormUpdate(event);
+            hideFiltersCars(event);           
             showAllCars();
         } else {
             alert('Failed to update car.');
