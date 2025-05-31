@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cars")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*")  // Configure CORS to allow requests.
 public class MainController {
 
     private final ServicesCarDeals servicesCarDeals;
@@ -28,7 +28,7 @@ public class MainController {
     }
 
     @GetMapping("/all_cars")
-    public Iterable<Car> allCars() {
+    public List<Car> allCars() {
         return servicesCarDeals.getAllCars();
     }
 
@@ -88,17 +88,17 @@ public class MainController {
     }
 
     @GetMapping("/all_brands")
-    public Iterable<Brand> getAllBrands() {
+    public List<Brand> getAllBrands() {
         return servicesCarDeals.getAllCarsBrands();
     }
 
     @GetMapping("/filter_brand/{brand}")
-    public Iterable<Car> findAllCarsByBrand(@PathVariable Brand brand) {
+    public List<Car> findAllCarsByBrand(@PathVariable Brand brand) {
         return servicesCarDeals.findAllByBrand(brand);
     }
 
     @GetMapping("/filter_model/{model}")
-    public Iterable<Car> findAllCarsByModel(@PathVariable String model) {
+    public List<Car> findAllCarsByModel(@PathVariable String model) {
         return servicesCarDeals.findAllByModel(model);
     }
 
@@ -106,9 +106,10 @@ public class MainController {
     public List<Car> filterCars(
             @RequestParam Brand brand,
             @RequestParam String model,
+            @RequestParam Integer fabrication,
             @RequestParam Car.CarStatus status
     ) {
-        return servicesCarDeals.filterCars(brand, model, status);
+        return servicesCarDeals.filterCars(brand, model, fabrication, status);
     }
 
 }

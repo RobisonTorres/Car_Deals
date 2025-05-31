@@ -1,7 +1,6 @@
 package com.unifecaf.management.Car_Deals.Dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.*;
 
 public class BrandDto {
 
@@ -26,5 +25,4 @@ public class BrandDto {
     public void setName(String name) {
         this.name = name;
     }
-
 }

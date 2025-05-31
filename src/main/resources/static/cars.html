@@ -5,30 +5,9 @@
     <title>Cars</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
-<body onload = "brandSelect(filter_brand)">  
-    <h2>All Cars</h2>
-    <button id="clickMe">Show All Cars</button>
+<body onload = "brandSelect(filter_brand)">
     <button id="addNewCar">New Car</button>
-        <div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Brand</th>
-                        <th>Model</th>
-                        <th>Fabrication Date</th>
-                        <th>Color</th>  
-                        <th>Mileage</th>
-                        <th>Plate</th>
-                        <th>Price</th>
-                        <th>Status</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-            </table>        
-        </div>
-        <div id="showAllCars"></div> <!-- Rows will be populated here by JavaScript -->
-        <h2>Filter Cars</h2>
+    <h2>Find Your Car By</h2>
         <form>
             <div>
                 <select id="filter_brand" name="filter_brand">
@@ -38,6 +17,11 @@
             <div>
                 <select id="filter_model" name="filter_model">
                     <option value="" disabled selected hidden>Model</option>
+                </select>
+            </div>
+            <div>
+                <select id="filter_year" name="filter_year">
+                    <option value="" disabled selected hidden>Year</option>
                 </select>
             </div>
             <div>
@@ -52,13 +36,26 @@
                 <button id="hideFilterResult">Close</button>
             </div>
         </form>
-        <div id="showAllCarsFiltered"></div> <!-- Rows will be populated here by JavaScript -->
+
+        <div id="showAllCarsFiltered"></div>
+        <!-- Rows will be populated here by JavaScript -->
+         
+        <form>
+            <h2>Search Car</h2>
+            <div>
+                <input id="searchCar" type="text" name="search_info" placeholder="Search here...">
+            </div>
+        </form>
+
+        <div id="showAllCars"></div>
+        <!-- Rows will be populated here by JavaScript -->
+
         <form id="popForm" style="display: none;">
             <h2>New Car</h2>
             <div>
                 <label for="brand">Brand:</label>
                 <select id="brand" name="brand" onchange="addNewBrand(event)">
-                    <option value="">-- Select Brand --</option>
+                    <option value="" disabled selected hidden>Select Brand</option>
                 </select>
                 <input type="text" id="brandNew" name="brandNew" placeholder="Enter new brand" style="display: none;">
             </div>
@@ -89,7 +86,7 @@
             <div>
                 <label for="status">Status:</label>
                 <select id="status" name="status">
-                    <option value="">-- Select Status --</option>
+                    <option value="" disabled selected hidden>Status</option>
                     <option value="NEW">NEW</option>
                     <option value="SECOND_HAND">SECOND_HAND</option>
                 </select>
@@ -107,7 +104,7 @@
             <div>
                 <label for="brand_update">Brand:</label>
                 <select id="brand_update" name="brand_update" onchange="addNewBrand(event)">
-                    <option value="">-- Select Brand --</option>
+                    <option value="" disabled selected hidden>Brand</option>
                 </select>
                 <input type="text" id="brandUpdate" name="brandUpdate" placeholder="Update brand" style="display: none;">
             </div>
@@ -138,7 +135,7 @@
             <div>
                 <label for="status_update">Status:</label>
                 <select id="status_update" name="status">
-                    <option value="">-- Select Status --</option>
+                    <option value="" disabled selected hidden>Status</option>
                     <option value="NEW">NEW</option>
                     <option value="SECOND_HAND">SECOND_HAND</option>
                 </select>

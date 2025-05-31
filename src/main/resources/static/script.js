@@ -1,22 +1,3 @@
-document.getElementById('clickMe').addEventListener('click', allCarsOption);
-function allCarsOption () {
-    
-    // This function is called when the "Show All Cars" button is clicked. It toggles the display
-    // of all cars by changing the button text and calling the appropriate function to show or hide
-    // the cars. It also closes any open forms.
-    const titleEnum = Object.freeze({show: "Show All Cars",  hide: "Hide All Cars"});
-    const button = document.getElementById('clickMe');
-    if (button.innerHTML === titleEnum.show) {
-        button.innerHTML = titleEnum.hide;
-        showAllCars();
-        closeForm(event);
-        closeFormUpdate(event);
-    } else {
-        button.innerHTML = titleEnum.show;
-        hideAllCars();
-    }
-}
-
 document.getElementById('addNewCar').addEventListener('click', displayForm);
 function displayForm() {
 
@@ -83,6 +64,10 @@ function createCar(event) {
         price: document.getElementById('price').value,
         status: document.getElementById('status').value
     };
+    if (!car.model || !car.fabrication || !car.color || !car.plate || !car.price || !car.status) {
+        alert('Please fill in all fields.');    
+        return;
+    };
     const bcWrapperDtoCreate = {
         brandDto: brand,
         carDto: car
@@ -121,32 +106,52 @@ function showAllCars() {
     .then(response => response.json())
     .then(data => {
         let output = `
-            <tbody>
-        `;
-        data.forEach(car => {
-            output += `
-                <tr id="car-${car.id}">
-                    <td>${car.brand.name}</td>
-                    <td>${car.model}</td>
-                    <td>${car.fabrication ?? 'N/A'}</td>
-                    <td>${car.color}</td>
-                    <td>${car.mileage} km</td>
-                    <td>${car.plate}</td>
-                    <td>$${car.price}</td>
-                    <td>${car.status}</td>
-                    <td>
-                         <button class="edit-btn" id="editCar" onclick="editCarLoad(${car.id})">Edit</button>
-                    </td>
-                    <td>
-                        <button class="delete-btn" onclick="deleteCar(${car.id})">Delete</button>
-                    </td>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Brand</th>
+                    <th>Model</th>
+                    <th>Fabrication Date</th>
+                    <th>Color</th>
+                    <th>Mileage</th>
+                    <th>Plate</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
                 </tr>
-            `;
-        });
+            </thead>
+            <tbody id="showAllCars">
+`;
+
+    data.forEach(car => {
         output += `
-                </tbody>
-            </table>
+            <tr id="car-${car.id}">
+            <td>${car.brand.name}</td>
+            <td>${car.model}</td>
+            <td>${car.fabrication ?? 'N/A'}</td>
+            <td>${car.color}</td>
+            <td>${car.mileage} km</td>
+            <td>${car.plate}</td>
+            <td>$${car.price}</td>
+            <td>${car.status}</td>
+            <td>
+                <button class="edit-btn" id="editCar" onclick="editCarLoad(${car.id})">Edit</button>
+            </td>
+            <td>
+                <button class="delete-btn" onclick="deleteCar(${car.id})">Delete</button>
+            </td>
+            </tr>
         `;
+    });
+
+    output += `
+            </tbody>
+        </table>
+    </div>
+        `;
+        
         document.getElementById('showAllCars').innerHTML = output;
     })
     .catch(error => {
@@ -219,6 +224,10 @@ function updateCar(event) {
         price: document.getElementById('price_update').value,
         status: document.getElementById('status_update').value
     };
+    if (!car.model || !car.fabrication || !car.color || !car.plate || !car.price || !car.status) {
+        alert('Please fill in all fields.');
+        return;
+    };
     const brandCarWrapperUpdate = {
         brandDto: brand,
         carDto: car
@@ -251,6 +260,9 @@ function deleteCar(carId) {
 
     // This function is called when the "Delete" button is clicked. It sends a DELETE request
     // to the server to delete the car with the specified ID.
+    if (!confirm('Are you sure you want to delete this car?')) {
+        return; // If the user cancels, do nothing.
+    };
     carId = parseInt(carId, 10);
     fetch(`http://localhost:8080/cars/delete_car/${carId}`, {
         method: 'DELETE'
@@ -336,26 +348,73 @@ function modelSelect() {
     });
 }
 
+document.getElementById('filter_model').addEventListener('change', yearSelect);
+function yearSelect() {
+
+    // This function is called when the model selection input changes. It fetches the years
+    // associated with the selected model and populates the year selection input with the available years.
+    const select = document.getElementById('filter_year');
+    select.innerHTML = `<option value="" disabled selected hidden>Year</option>`;
+    const model = document.getElementById('filter_model').value;
+
+    fetch(`http://localhost:8080/cars/filter_model/${model}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const models = new Set();
+        data.forEach(car => {
+            if (!models.has(car.fabrication)) {
+                models.add(car.fabrication);
+                const option = document.createElement('option');
+                option.value = car.fabrication;
+                option.text = car.fabrication;
+                select.appendChild(option);
+            }
+        });
+    });
+}
+
 function filterCars(event) {
 
-    // This function is called when the "Filter Cars" button is clicked. It collects the filter criteria
-    // from the form fields and sends a GET request to the server to filter the cars based on the criteria.
+    // This function is called when the filter form is submitted. It collects the filter criteria
+    // from the form fields, constructs a query string, and sends a GET request to the server
+    // to filter the cars based on the selected criteria.
+    event.preventDefault();
     const brand = document.getElementById('filter_brand').value;
     const model = document.getElementById('filter_model').value;
+    const fabrication = parseInt(document.getElementById('filter_year').value, 10);
     const status = document.getElementById('filter_status').value;
-    event.preventDefault();
-    if (!brand || !model || !status) {
+
+    if (!brand || !model || !fabrication || !status) {
         alert('Please select all filter criteria.');
         return;
     }
-    fetch(`http://localhost:8080/cars/filter_cars?brand=${brand}&model=${model}&status=${status}`, {
+
+    fetch(`http://localhost:8080/cars/filter_cars?brand=${brand}&model=${model}&fabrication=${fabrication}&status=${status}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
     })
     .then(response => response.json())
     .then(data => {
         let output = `
-            <tbody>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Brand</th>
+                        <th>Model</th>
+                        <th>Fabrication Date</th>
+                        <th>Color</th>  
+                        <th>Mileage</th>
+                        <th>Plate</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
         `;
         data.forEach(car => {
             output += `
@@ -369,7 +428,7 @@ function filterCars(event) {
                     <td>$${car.price}</td>
                     <td>${car.status}</td>
                     <td>
-                         <button class="edit-btn" id="editCar" onclick="editCarLoad(${car.id})">Edit</button>
+                        <button class="edit-btn" id="editCar" onclick="editCarLoad(${car.id})">Edit</button>
                     </td>
                     <td>
                         <button class="delete-btn" onclick="deleteCar(${car.id})">Delete</button>
@@ -382,10 +441,11 @@ function filterCars(event) {
             </table>
         `;
         document.getElementById('showAllCarsFiltered').innerHTML = output;
-    }).catch(error => {
+    })
+    .catch(error => {
         console.error('Error filtering cars:', error);
         document.getElementById('showAllCarsFiltered').innerHTML = '<p>Error loading filtered cars.</p>';
-    } );
+    });
 }
 
 document.getElementById('hideFilterResult').addEventListener('click', hideFiltersCars);
@@ -396,3 +456,31 @@ function hideFiltersCars(event) {
     document.querySelector('form').reset();
     document.getElementById('showAllCarsFiltered').innerHTML = '';
 }
+
+const search = document.querySelector('#searchCar');
+const carTableBody = document.querySelector('#showAllCars');
+search.addEventListener('input', () => {
+
+    // This function filters the car table based on the search input.
+    // It listens for input events on the search field and hides rows that do not match the search criteria.
+    const searchValue = search.value.toLowerCase();
+    const rows = carTableBody.querySelectorAll('tr');    
+
+    rows.forEach(car => {
+        const brandRow = car.querySelector('td:nth-child(1)');
+        const modelRow = car.querySelector('td:nth-child(2)');
+
+        // This line below is useful for ensuring that the search functionality does not break.
+        if (brandRow && modelRow) {
+            const carBrand = brandRow.textContent.toLowerCase();
+            const carModel = modelRow.textContent.toLowerCase();
+            if (!carBrand.includes(searchValue) && !carModel.includes(searchValue)) {
+                car.style.display = 'none';
+            } else {
+                car.style.display = '';
+            }
+        }
+    });
+});
+
+showAllCars();
