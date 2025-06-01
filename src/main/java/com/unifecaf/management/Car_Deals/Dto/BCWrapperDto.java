@@ -3,6 +3,8 @@ package com.unifecaf.management.Car_Deals.Dto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
+// BCWrapperDto.java - Wrapper DTO for Brand and Car.
+// This class serves as a container for BrandDto and CarDto, ensuring that both are provided and valid.''
 public class BCWrapperDto {
 
     @Valid

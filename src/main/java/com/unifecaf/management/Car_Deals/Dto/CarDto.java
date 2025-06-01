@@ -2,7 +2,8 @@ package com.unifecaf.management.Car_Deals.Dto;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-
+// CarDto.java - Data Transfer Object for Car.
+// This class represents the data structure for a car, including validation constraints.
 public class CarDto {
 
     @Valid

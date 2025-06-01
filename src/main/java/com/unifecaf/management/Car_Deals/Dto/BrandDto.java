@@ -2,6 +2,8 @@ package com.unifecaf.management.Car_Deals.Dto;
 
 import jakarta.validation.constraints.*;
 
+// BrandDto.java - Data Transfer Object for Brand.
+// This class represents the data structure for a car brand, including validation constraints.
 public class BrandDto {
 
     private Integer id;

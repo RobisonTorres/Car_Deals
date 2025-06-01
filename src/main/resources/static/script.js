@@ -97,8 +97,8 @@ function createCar(event) {
 
 function showAllCars() {
 
-    // This function fetches all cars from the server and displays them in a table.
-    // It sends a GET request to the server and processes the response.
+    // This function fetches all cars from the server and displays them in a table format.
+    // It constructs the table rows dynamically based on the data received from the server.
     fetch('http://localhost:8080/cars/all_cars', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
@@ -106,57 +106,56 @@ function showAllCars() {
     .then(response => response.json())
     .then(data => {
         let output = `
-    <div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Brand</th>
-                    <th>Model</th>
-                    <th>Fabrication Date</th>
-                    <th>Color</th>
-                    <th>Mileage</th>
-                    <th>Plate</th>
-                    <th>Price</th>
-                    <th>Status</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+            <div class="table-responsive mt-4">
+                <table class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Brand</th>
+                            <th>Model</th>
+                            <th>Fabrication Date</th>
+                            <th>Color</th>
+                            <th>Mileage</th>
+                            <th>Plate</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th colspan="2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+
+        data.forEach(car => {
+            output += `
+                <tr id="car-${car.id}">
+                    <td>${car.brand.name}</td>
+                    <td>${car.model}</td>
+                    <td>${car.fabrication ?? 'N/A'}</td>
+                    <td>${car.color}</td>
+                    <td>${car.mileage} km</td>
+                    <td>${car.plate}</td>
+                    <td>$${car.price}</td>
+                    <td>${car.status}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" id="editCar" onclick="editCarLoad(${car.id})">Edit</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" onclick="deleteCar(${car.id})">Delete</button>
+                    </td>
                 </tr>
-            </thead>
-            <tbody id="showAllCars">
-`;
+            `;
+        });
 
-    data.forEach(car => {
         output += `
-            <tr id="car-${car.id}">
-            <td>${car.brand.name}</td>
-            <td>${car.model}</td>
-            <td>${car.fabrication ?? 'N/A'}</td>
-            <td>${car.color}</td>
-            <td>${car.mileage} km</td>
-            <td>${car.plate}</td>
-            <td>$${car.price}</td>
-            <td>${car.status}</td>
-            <td>
-                <button class="edit-btn" id="editCar" onclick="editCarLoad(${car.id})">Edit</button>
-            </td>
-            <td>
-                <button class="delete-btn" onclick="deleteCar(${car.id})">Delete</button>
-            </td>
-            </tr>
+                    </tbody>
+                </table>
+            </div>
         `;
-    });
 
-    output += `
-            </tbody>
-        </table>
-    </div>
-        `;
-        
         document.getElementById('showAllCars').innerHTML = output;
     })
     .catch(error => {
         console.error('Error fetching cars:', error);
-        document.getElementById('showAllCars').innerHTML = '<p>Error loading cars.</p>';
+        document.getElementById('showAllCars').innerHTML = '<div class="alert alert-danger">Error loading cars.</div>';
     });
 }
 
@@ -377,10 +376,9 @@ function yearSelect() {
 }
 
 function filterCars(event) {
-
+    
     // This function is called when the filter form is submitted. It collects the filter criteria
-    // from the form fields, constructs a query string, and sends a GET request to the server
-    // to filter the cars based on the selected criteria.
+    // from the form fields, constructs a query string, and sends a GET request to the server.
     event.preventDefault();
     const brand = document.getElementById('filter_brand').value;
     const model = document.getElementById('filter_model').value;
@@ -391,7 +389,6 @@ function filterCars(event) {
         alert('Please select all filter criteria.');
         return;
     }
-
     fetch(`http://localhost:8080/cars/filter_cars?brand=${brand}&model=${model}&fabrication=${fabrication}&status=${status}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
@@ -399,8 +396,8 @@ function filterCars(event) {
     .then(response => response.json())
     .then(data => {
         let output = `
-            <table>
-                <thead>
+            <table class="table table-striped table-bordered mt-4">
+                <thead class="table-dark">
                     <tr>
                         <th>Brand</th>
                         <th>Model</th>
@@ -410,8 +407,7 @@ function filterCars(event) {
                         <th>Plate</th>
                         <th>Price</th>
                         <th>Status</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
+                        <th colspan="2">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -428,10 +424,10 @@ function filterCars(event) {
                     <td>$${car.price}</td>
                     <td>${car.status}</td>
                     <td>
-                        <button class="edit-btn" id="editCar" onclick="editCarLoad(${car.id})">Edit</button>
+                        <button class="btn btn-sm btn-primary" id="editCar" onclick="editCarLoad(${car.id})">Edit</button>
                     </td>
                     <td>
-                        <button class="delete-btn" onclick="deleteCar(${car.id})">Delete</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteCar(${car.id})">Delete</button>
                     </td>
                 </tr>
             `;
@@ -444,7 +440,7 @@ function filterCars(event) {
     })
     .catch(error => {
         console.error('Error filtering cars:', error);
-        document.getElementById('showAllCarsFiltered').innerHTML = '<p>Error loading filtered cars.</p>';
+        document.getElementById('showAllCarsFiltered').innerHTML = '<div class="alert alert-danger">Error loading filtered cars.</div>';
     });
 }
 

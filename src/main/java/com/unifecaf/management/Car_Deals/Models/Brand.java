@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+// Brand.java - Entity class representing a car brand.
+// This class is mapped to the "brands" table in the database and contains fields for brand ID, name, and a list of associated cars.
 @Entity
 @Table(name = "brands")
 public class Brand {

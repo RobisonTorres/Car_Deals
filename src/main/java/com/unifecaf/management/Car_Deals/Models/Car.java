@@ -2,6 +2,8 @@ package com.unifecaf.management.Car_Deals.Models;
 
 import jakarta.persistence.*;
 
+// Car.java - Entity class representing a car.
+// This class is mapped to the "cars" table in the database and contains fields for car ID, model, fabrication year, color, mileage, plate, price, status, and associated brand.
 @Entity
 @Table(name = "cars")
 public class Car {

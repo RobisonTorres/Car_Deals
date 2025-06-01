@@ -11,6 +11,7 @@ import java.util.List;
 @Service
 public class ServicesCarDeals {
 
+    // Dependence injection for RepositoryCarDeals and RepositoryBrand.
     private final RepositoryCarDeals repositoryCarDeals;
     private final RepositoryBrand repositoryBrand;
 
@@ -77,4 +78,5 @@ public class ServicesCarDeals {
         // It returns a list of Cars that match the given criteria.
         return repositoryCarDeals.findCarsByFilters(brand, model, fabrication, status);
     }
+    
 }

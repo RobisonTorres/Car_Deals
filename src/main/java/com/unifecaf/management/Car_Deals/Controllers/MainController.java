@@ -17,6 +17,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/cars")
 @CrossOrigin(origins = "*")  // Configure CORS to allow requests.
+// MainController.java - Controller for Car Deals Management.
+// This controller handles HTTP requests related to car deals, including CRUD operations for cars and brands.
 public class MainController {
 
     private final ServicesCarDeals servicesCarDeals;
@@ -111,5 +113,4 @@ public class MainController {
     ) {
         return servicesCarDeals.filterCars(brand, model, fabrication, status);
     }
-
 }

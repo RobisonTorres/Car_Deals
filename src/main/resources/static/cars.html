@@ -1,152 +1,228 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Cars</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <meta charset="UTF-8" />
+  <title>Cars</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+  />
+  <style>
+    body {
+      background-color: #f8f9fa;
+      padding: 2rem;
+    }
+
+    .form-popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1050;
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+      max-width: 700px;
+      width: 90%;
+    }
+
+    .btn-close-custom {
+      float: right;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    #addNewCar {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: #0d6efd;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+    }
+
+    #addNewCar i {
+      margin-right: 5px;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+  </style>
 </head>
-<body onload = "brandSelect(filter_brand)">
-    <button id="addNewCar">New Car</button>
-    <h2>Find Your Car By</h2>
-        <form>
-            <div>
-                <select id="filter_brand" name="filter_brand">
-                    <option value="" disabled selected hidden>Brand</option>
-                </select>
-            </div>
-            <div>
-                <select id="filter_model" name="filter_model">
-                    <option value="" disabled selected hidden>Model</option>
-                </select>
-            </div>
-            <div>
-                <select id="filter_year" name="filter_year">
-                    <option value="" disabled selected hidden>Year</option>
-                </select>
-            </div>
-            <div>
-                <select id="filter_status" name="filter_status">
-                    <option value="" disabled selected hidden>Status</option>
-                    <option value="NEW">NEW</option>
-                    <option value="SECOND_HAND">SECOND_HAND</option>
-                </select>
-            </div>
-            <div>
-                <button type="submit" onclick="filterCars(event)">Filter</button>
-                <button id="hideFilterResult">Close</button>
-            </div>
-        </form>
+<body onload="brandSelect(filter_brand)">
+  <button id="addNewCar" onclick="document.getElementById('popForm').style.display = 'block'">
+    <i class="bi bi-plus-circle-fill"></i> New Car
+  </button>
 
-        <div id="showAllCarsFiltered"></div>
-        <!-- Rows will be populated here by JavaScript -->
-         
-        <form>
-            <h2>Search Car</h2>
-            <div>
-                <input id="searchCar" type="text" name="search_info" placeholder="Search here...">
-            </div>
-        </form>
-
-        <div id="showAllCars"></div>
-        <!-- Rows will be populated here by JavaScript -->
-
-        <form id="popForm" style="display: none;">
-            <h2>New Car</h2>
-            <div>
-                <label for="brand">Brand:</label>
-                <select id="brand" name="brand" onchange="addNewBrand(event)">
-                    <option value="" disabled selected hidden>Select Brand</option>
-                </select>
-                <input type="text" id="brandNew" name="brandNew" placeholder="Enter new brand" style="display: none;">
-            </div>
-            <div>
-                <label for="model"> Model:</label>
-                <input type="text" id="model">
-            </div>
-            <div>
-                <label for="fabrication">Fabrication date:</label>
-                <input type="number" id="fabrication" min="1900" max="2100">
-            </div>
-            <div>
-                <label for="color">Color:</label>
-                <input type="text" id="color">
-            </div>
-            <div>
-                <label for="mileage">Mileage:</label>
-                <input type="number" id="mileage" min="0">
-            </div>
-            <div>
-                <label for="plate">Plate:</label>
-                <input type="text" id="plate">
-            </div>
-            <div>
-                <label for="price">Price:</label>
-                <input type="number" min="0" id="price" name="price">
-            </div>
-            <div>
-                <label for="status">Status:</label>
-                <select id="status" name="status">
-                    <option value="" disabled selected hidden>Status</option>
-                    <option value="NEW">NEW</option>
-                    <option value="SECOND_HAND">SECOND_HAND</option>
-                </select>
-            </div>
-            <div>
-                <button type="submit" onclick="createCar(event)">Create</button>
-                <button id="closeForm">Close</button>
-            </div>
-        </form>     
+  <h2><i class="bi bi-funnel-fill text-primary"></i> Find Your Car By</h2>
+  <form class="mb-4">
+    <div class="row g-2">
+      <div class="col-md-3">
+        <select id="filter_brand" class="form-select" name="filter_brand">
+          <option value="" disabled selected hidden>Brand</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select id="filter_model" class="form-select" name="filter_model">
+          <option value="" disabled selected hidden>Model</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select id="filter_year" class="form-select" name="filter_year">
+          <option value="" disabled selected hidden>Year</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select id="filter_status" class="form-select" name="filter_status">
+          <option value="" disabled selected hidden>Status</option>
+          <option value="NEW">NEW</option>
+          <option value="SECOND_HAND">SECOND_HAND</option>
+        </select>
+      </div>
     </div>
-    <div>
-        <form id="popFormUpdate" style="display: none;">
-            <h2>Update Car's Info</h2>
-            <input type="hidden" id="carId">
-            <div>
-                <label for="brand_update">Brand:</label>
-                <select id="brand_update" name="brand_update" onchange="addNewBrand(event)">
-                    <option value="" disabled selected hidden>Brand</option>
-                </select>
-                <input type="text" id="brandUpdate" name="brandUpdate" placeholder="Update brand" style="display: none;">
-            </div>
-            <div>
-                <label for="model_update">Model:</label>
-                <input type="text" id="model_update">
-            </div>
-            <div>
-                <label for="fabrication_update">Fabrication date:</label>
-                <input type="number" id="fabrication_update" min="1900" max="2100">
-            </div>
-            <div>
-                <label for="color_update">Color:</label>
-                <input type="text" id="color_update">
-            </div>
-            <div>
-                <label for="mileage_update">Mileage:</label>
-                <input type="number" id="mileage_update" min="0">
-            </div>
-            <div>
-                <label for="plate_update">Plate:</label>
-                <input type="text" id="plate_update">
-            </div>
-            <div>
-                <label for="price_update">Price:</label>
-                <input type="number" min="0" id="price_update" name="price">
-            </div>
-            <div>
-                <label for="status_update">Status:</label>
-                <select id="status_update" name="status">
-                    <option value="" disabled selected hidden>Status</option>
-                    <option value="NEW">NEW</option>
-                    <option value="SECOND_HAND">SECOND_HAND</option>
-                </select>
-            </div>
-            <div>
-                <button type="submit" onclick="updateCar(event)">Update</button>
-                <button id="closeFormUpdate">Close</button>
-            </div>
-        </form>
+    <div class="mt-3">
+      <button type="submit" class="btn btn-primary me-2" onclick="filterCars(event)">
+        <i class="bi bi-search"></i> Filter
+      </button>
+      <button type="button" class="btn btn-secondary" id="hideFilterResult">
+        <i class="bi bi-x-circle"></i> Close
+      </button>
     </div>
-    <script src="script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </form>
+
+  <div id="showAllCarsFiltered"></div>
+
+  <form class="mb-4">
+    <h2><i class="bi bi-search"></i> Search Car</h2>
+    <input id="searchCar" type="text" class="form-control" name="search_info" placeholder="Search by Brand or Model..." />
+  </form>
+
+  <div id="showAllCars"></div>
+
+  <!-- New Car Form -->
+  <form id="popForm" class="form-popup">
+    <h2><i class="bi bi-plus-circle"></i> New Car</h2>
+    <div class="form-grid">
+      <div>
+        <label for="brand">Brand</label>
+        <select id="brand" class="form-select" name="brand" onchange="addNewBrand(event)">
+          <option value="" disabled selected hidden>Select Brand</option>
+        </select>
+        <input type="text" id="brandNew" name="brandNew" class="form-control mt-2" placeholder="Enter new brand" style="display: none;" />
+      </div>
+      <div>
+        <label for="model">Model</label>
+        <input type="text" id="model" class="form-control" />
+      </div>
+      <div>
+        <label for="fabrication">Fabrication date</label>
+        <input type="number" id="fabrication" min="1900" max="2100" class="form-control" />
+      </div>
+      <div>
+        <label for="color">Color</label>
+        <input type="text" id="color" class="form-control" />
+      </div>
+      <div>
+        <label for="mileage">Mileage</label>
+        <input type="number" id="mileage" min="0" class="form-control" />
+      </div>
+      <div>
+        <label for="plate">Plate</label>
+        <input type="text" id="plate" class="form-control" />
+      </div>
+      <div>
+        <label for="price">Price</label>
+        <input type="number" min="0" id="price" name="price" class="form-control" />
+      </div>
+      <div>
+        <label for="status">Status</label>
+        <select id="status" name="status" class="form-select">
+          <option value="" disabled selected hidden>Status</option>
+          <option value="NEW">NEW</option>
+          <option value="SECOND_HAND">SECOND_HAND</option>
+        </select>
+      </div>
+    </div>
+    <div class="mt-3">
+      <button type="submit" class="btn btn-success" onclick="createCar(event)">
+        <i class="bi bi-check-circle"></i> Create
+      </button>
+      <button type="button" class="btn btn-danger" id="closeForm" onclick="document.getElementById('popForm').style.display = 'none'">
+        <i class="bi bi-x-circle"></i> Close
+      </button>
+    </div>
+  </form>
+
+  <!-- Update Car Form -->
+  <form id="popFormUpdate" class="form-popup">
+    <h2><i class="bi bi-pencil-square"></i> Update Car</h2>
+    <input type="hidden" id="carId" />
+    <div class="form-grid">
+      <div>
+        <label for="brand_update">Brand</label>
+        <select id="brand_update" class="form-select" name="brand_update" onchange="addNewBrand(event)">
+          <option value="" disabled selected hidden>Brand</option>
+        </select>
+        <input type="text" id="brandUpdate" name="brandUpdate" class="form-control mt-2" placeholder="Update brand" style="display: none;" />
+      </div>
+      <div>
+        <label for="model_update">Model</label>
+        <input type="text" id="model_update" class="form-control" />
+      </div>
+      <div>
+        <label for="fabrication_update">Fabrication date</label>
+        <input type="number" id="fabrication_update" min="1900" max="2100" class="form-control" />
+      </div>
+      <div>
+        <label for="color_update">Color</label>
+        <input type="text" id="color_update" class="form-control" />
+      </div>
+      <div>
+        <label for="mileage_update">Mileage</label>
+        <input type="number" id="mileage_update" min="0" class="form-control" />
+      </div>
+      <div>
+        <label for="plate_update">Plate</label>
+        <input type="text" id="plate_update" class="form-control" />
+      </div>
+      <div>
+        <label for="price_update">Price</label>
+        <input type="number" min="0" id="price_update" name="price" class="form-control" />
+      </div>
+      <div>
+        <label for="status_update">Status</label>
+        <select id="status_update" name="status" class="form-select">
+          <option value="" disabled selected hidden>Status</option>
+          <option value="NEW">NEW</option>
+          <option value="SECOND_HAND">SECOND_HAND</option>
+        </select>
+      </div>
+    </div>
+    <div class="mt-3">
+      <button type="submit" class="btn btn-primary" onclick="updateCar(event)">
+        <i class="bi bi-save"></i> Update
+      </button>
+      <button type="button" class="btn btn-danger" id="closeFormUpdate" onclick="document.getElementById('popFormUpdate').style.display = 'none'">
+        <i class="bi bi-x-circle"></i> Close
+      </button>
+    </div>
+  </form>
+  <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
