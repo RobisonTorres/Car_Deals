@@ -1,10 +1,10 @@
 package com.unifecaf.management.Car_Deals.Controllers;
 
-import com.unifecaf.management.Car_Deals.Dto.BCWrapperDto;
-import com.unifecaf.management.Car_Deals.Dto.BrandDto;
+import com.unifecaf.management.Car_Deals.Dtos.BCWrapperDto;
+import com.unifecaf.management.Car_Deals.Dtos.BrandDto;
 import com.unifecaf.management.Car_Deals.Models.Brand;
 import com.unifecaf.management.Car_Deals.Models.Car;
-import com.unifecaf.management.Car_Deals.Dto.CarDto;
+import com.unifecaf.management.Car_Deals.Dtos.CarDto;
 import com.unifecaf.management.Car_Deals.Services.ServicesCarDeals;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -31,11 +31,13 @@ public class MainController {
 
     @GetMapping("/all_cars")
     public List<Car> allCars() {
+        // Fetches all cars from the service layer.
         return servicesCarDeals.getAllCars();
     }
 
     @GetMapping("/get_car/{id}")
     public Car getById(@PathVariable Integer id) {
+        // Retrieves a car by its ID. If the car is not found, it throws a 404 Not Found exception.
         Car car = servicesCarDeals.getCarById(id);
         if (car == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -45,7 +47,7 @@ public class MainController {
 
     @PostMapping("/create_car")
     public ResponseEntity<Car> createCar(@Valid @RequestBody BCWrapperDto bcWrapperDto) {
-
+        // Creates a new car and its associated brand. If the brand does not exist, it saves it.
         Car car = new Car();
         CarDto carDto = bcWrapperDto.getCarDto();
         modelMapper.map(carDto, car);
@@ -65,7 +67,7 @@ public class MainController {
 
     @PutMapping("/update_car/{id}")
     public ResponseEntity<Void> updateCar(@Valid @RequestBody BCWrapperDto bcWrapperDto, @PathVariable Integer id){
-
+        // Updates an existing car and its associated brand. If the brand does not exist, it saves it.
         Car car = servicesCarDeals.getCarById(id);
         CarDto carDto = bcWrapperDto.getCarDto();
         modelMapper.map(carDto, car);
@@ -85,22 +87,32 @@ public class MainController {
 
     @DeleteMapping("delete_car/{id}")
     public ResponseEntity<Void> deleteCar(@PathVariable Integer id) {
+        // Deletes a car by its ID.
         servicesCarDeals.deleteCarById(id);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/all_brands")
-    public List<Brand> getAllBrands() {
+    public List<Brand> getAllBrand() {
+        // Fetches all brands from the database.
+        return servicesCarDeals.getAllBrands();
+    }
+
+    @GetMapping("/all_brands_available")
+    public List<Brand> getAllBrandWithCarsAvailable() {
+        // Fetches all brands from the database with cars available.
         return servicesCarDeals.getAllCarsBrands();
     }
 
     @GetMapping("/filter_brand/{brand}")
     public List<Car> findAllCarsByBrand(@PathVariable Brand brand) {
+        // Retrieves all cars by brand.
         return servicesCarDeals.findAllByBrand(brand);
     }
 
     @GetMapping("/filter_model/{model}")
     public List<Car> findAllCarsByModel(@PathVariable String model) {
+        // Retrieves all cars by model.
         return servicesCarDeals.findAllByModel(model);
     }
 
@@ -111,6 +123,8 @@ public class MainController {
             @RequestParam Integer fabrication,
             @RequestParam Car.CarStatus status
     ) {
+        // Filters cars based on brand, model, fabrication year, and status.
         return servicesCarDeals.filterCars(brand, model, fabrication, status);
     }
+
 }

@@ -5,7 +5,6 @@ import com.unifecaf.management.Car_Deals.Models.Car;
 import com.unifecaf.management.Car_Deals.Repositories.RepositoryBrand;
 import com.unifecaf.management.Car_Deals.Repositories.RepositoryCarDeals;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -42,20 +41,20 @@ public class ServicesCarDeals {
         repositoryCarDeals.deleteById(id);
     }
 
-    public List<Brand> getAllCarsBrands() {
+    public List<Brand> getAllBrands() {
         // This function retrieves all Brands stored in the database.
         return repositoryBrand.findAll();
+    }
+
+    public List<Brand> getAllCarsBrands() {
+        // This function retrieves all Brands with cars available stored in the database.
+        return repositoryBrand.findBrandsWithCarsAvailable();
     }
 
     public boolean checkExistingBrand(String brand) {
         // This function checks if a brand exists in the database.
         // It returns true if the brand exists, false otherwise.
         return repositoryBrand.findByName(brand).isPresent();
-    }
-
-    public Brand getBrandById(Integer id) {
-        // This function retrieves a Brand object by ID.
-        return repositoryBrand.findById(id).orElse(null);
     }
 
     public Brand saveBrand(Brand brand) {
@@ -78,5 +77,4 @@ public class ServicesCarDeals {
         // It returns a list of Cars that match the given criteria.
         return repositoryCarDeals.findCarsByFilters(brand, model, fabrication, status);
     }
-    
 }

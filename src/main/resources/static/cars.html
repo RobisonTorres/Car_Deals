@@ -64,7 +64,7 @@
     }
   </style>
 </head>
-<body onload="brandSelect(filter_brand)">
+<body onload="brandSelect(filter_brand, 'all_brands_available')">
   <button id="addNewCar" onclick="document.getElementById('popForm').style.display = 'block'">
     <i class="bi bi-plus-circle-fill"></i> New Car
   </button>
@@ -90,8 +90,10 @@
       <div class="col-md-3">
         <select id="filter_status" class="form-select" name="filter_status">
           <option value="" disabled selected hidden>Status</option>
+          <!--
           <option value="NEW">NEW</option>
           <option value="SECOND_HAND">SECOND_HAND</option>
+          -->
         </select>
       </div>
     </div>
@@ -105,15 +107,18 @@
     </div>
   </form>
 
-  <div id="showAllCarsFiltered"></div>
-
+  <div class="container-fluid">
+  <div id="showAllCarsFiltered" class="row row-cols-1 row-cols-md-3 g-5"></div>
+  </div>
+  
   <form class="mb-4">
     <h2><i class="bi bi-search"></i> Search Car</h2>
     <input id="searchCar" type="text" class="form-control" name="search_info" placeholder="Search by Brand or Model..." />
   </form>
 
-  <div id="showAllCars"></div>
-
+  <div class="container-fluid">
+  <div id="showAllCars" class="row row-cols-1 row-cols-md-3 g-5"></div>
+  </div>
   <!-- New Car Form -->
   <form id="popForm" class="form-popup">
     <h2><i class="bi bi-plus-circle"></i> New Car</h2>

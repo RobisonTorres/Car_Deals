@@ -6,7 +6,7 @@ function displayForm() {
     closeFormUpdate(event);
     const input = document.getElementById('brand');
     if (input.options.length <= 1) {
-        brandSelect(input);
+        brandSelect(input, 'all_brands');
     }
     const form = document.getElementById('popForm');
     return form.style.display = 'block';
@@ -105,57 +105,35 @@ function showAllCars() {
     })
     .then(response => response.json())
     .then(data => {
-        let output = `
-            <div class="table-responsive mt-4">
-                <table class="table table-striped table-bordered">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Brand</th>
-                            <th>Model</th>
-                            <th>Fabrication Date</th>
-                            <th>Color</th>
-                            <th>Mileage</th>
-                            <th>Plate</th>
-                            <th>Price</th>
-                            <th>Status</th>
-                            <th colspan="2">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-        `;
-
+        let output = ``;
         data.forEach(car => {
-            output += `
-                <tr id="car-${car.id}">
-                    <td>${car.brand.name}</td>
-                    <td>${car.model}</td>
-                    <td>${car.fabrication ?? 'N/A'}</td>
-                    <td>${car.color}</td>
-                    <td>${car.mileage} km</td>
-                    <td>${car.plate}</td>
-                    <td>$${car.price}</td>
-                    <td>${car.status}</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary" id="editCar" onclick="editCarLoad(${car.id})">Edit</button>
-                    </td>
-                    <td>
-                        <button class="btn btn-sm btn-danger" onclick="deleteCar(${car.id})">Delete</button>
-                    </td>
-                </tr>
-            `;
-        });
-
-        output += `
-                    </tbody>
-                </table>
-            </div>
-        `;
-
+            output += `          
+                        <div class="col">
+                            <div class="card" style="width: auto; height: 25rem;">
+                                <img src="imgs/mercedes.jpg" class="card-img-top" alt="mercedes">
+                                <div class="card-body">
+                                    <h5 class="card-title">${car.brand.name}    ${car.price}</h5>
+                                    <p class="card-text">${car.model}    ${car.color}    ${car.status}</p>
+                            </div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">${car.mileage} km    ${car.plate}</li>
+                                    <li class="list-group-item">${car.fabrication ?? 'N/A'}</li>
+                                </ul>
+                                <div class="card-body">
+                                    <button id="editCar" onclick="editCarLoad(${car.id})">Edit</button>
+                                    <button onclick="deleteCar(${car.id})">Delete</button>
+                                    <tr id="car-${car.id}">
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        `;
+                    });
         document.getElementById('showAllCars').innerHTML = output;
     })
     .catch(error => {
         console.error('Error fetching cars:', error);
-        document.getElementById('showAllCars').innerHTML = '<div class="alert alert-danger">Error loading cars.</div>';
+        document.getElementById('showAllCars').innerHTML = '<div>Error loading cars.</div>';
     });
 }
 
@@ -278,11 +256,11 @@ function deleteCar(carId) {
     });
 }
 
-function brandSelect(brandInput) {
+function brandSelect(brandInput, filter_brand) {
 
     // This function fetches all car brands from the server and populates the brand selection input
     // with the available brands. It also adds an "Other" option to allow users to enter a new brand.
-    fetch('http://localhost:8080/cars/all_brands', {
+    fetch(`http://localhost:8080/cars/${filter_brand}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
     })
@@ -294,7 +272,7 @@ function brandSelect(brandInput) {
             newOption.text = brand.name;
             brandInput.appendChild(newOption);
         });
-        if (brandInput != filter_brand) {
+        if (filter_brand != 'all_brands_available') {
             const newOption = document.createElement('option');
             newOption.value = 'Other';
             newOption.text = 'Other';   
@@ -347,13 +325,15 @@ function modelSelect() {
     });
 }
 
-document.getElementById('filter_model').addEventListener('change', yearSelect);
-function yearSelect() {
+document.getElementById('filter_model').addEventListener('change', yearStatusSelect);
+function yearStatusSelect() {
 
-    // This function is called when the model selection input changes. It fetches the years
-    // associated with the selected model and populates the year selection input with the available years.
-    const select = document.getElementById('filter_year');
-    select.innerHTML = `<option value="" disabled selected hidden>Year</option>`;
+    // This function is called when the model selection input changes. It fetches the years and statuses
+    // associated with the selected model and populates the year and status selection input.
+    const select_year = document.getElementById('filter_year');
+    const select_status = document.getElementById('filter_status');    
+    select_year.innerHTML = `<option value="" disabled selected hidden>Year</option>`;
+    select_status.innerHTML = `<option value="" disabled selected hidden>Status</option>`;
     const model = document.getElementById('filter_model').value;
 
     fetch(`http://localhost:8080/cars/filter_model/${model}`, {
@@ -363,13 +343,21 @@ function yearSelect() {
     .then(response => response.json())
     .then(data => {
         const models = new Set();
+        const status = new Set();
         data.forEach(car => {
             if (!models.has(car.fabrication)) {
                 models.add(car.fabrication);
                 const option = document.createElement('option');
                 option.value = car.fabrication;
                 option.text = car.fabrication;
-                select.appendChild(option);
+                select_year.appendChild(option);
+            }
+            if (!status.has(car.status)) {
+                status.add(car.status);
+                const option = document.createElement('option');
+                option.value = car.status;
+                option.text = car.status;
+                select_status.appendChild(option);
             }
         });
     });
@@ -395,52 +383,35 @@ function filterCars(event) {
     })
     .then(response => response.json())
     .then(data => {
-        let output = `
-            <table class="table table-striped table-bordered mt-4">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Brand</th>
-                        <th>Model</th>
-                        <th>Fabrication Date</th>
-                        <th>Color</th>  
-                        <th>Mileage</th>
-                        <th>Plate</th>
-                        <th>Price</th>
-                        <th>Status</th>
-                        <th colspan="2">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-        `;
+        let output = ``;
         data.forEach(car => {
-            output += `
-                <tr id="car-${car.id}">
-                    <td>${car.brand.name}</td>
-                    <td>${car.model}</td>
-                    <td>${car.fabrication ?? 'N/A'}</td>
-                    <td>${car.color}</td>
-                    <td>${car.mileage} km</td>
-                    <td>${car.plate}</td>
-                    <td>$${car.price}</td>
-                    <td>${car.status}</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary" id="editCar" onclick="editCarLoad(${car.id})">Edit</button>
-                    </td>
-                    <td>
-                        <button class="btn btn-sm btn-danger" onclick="deleteCar(${car.id})">Delete</button>
-                    </td>
-                </tr>
-            `;
-        });
-        output += `
-                </tbody>
-            </table>
-        `;
+            output += `          
+                        <div class="col">
+                            <div class="card" style="width: auto; height: 25rem;">
+                                <img src="imgs/mercedes.jpg" class="card-img-top" alt="mercedes">
+                                <div class="card-body">
+                                    <h5 class="card-title">${car.brand.name}    ${car.price}</h5>
+                                    <p class="card-text">${car.model}    ${car.color}    ${car.status}</p>
+                            </div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">${car.mileage} km    ${car.plate}</li>
+                                    <li class="list-group-item">${car.fabrication ?? 'N/A'}</li>
+                                </ul>
+                                <div class="card-body">
+                                    <button id="editCar" onclick="editCarLoad(${car.id})">Edit</button>
+                                    <button onclick="deleteCar(${car.id})">Delete</button>
+                                    <tr id="car-${car.id}">
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        `;
+                    });
         document.getElementById('showAllCarsFiltered').innerHTML = output;
     })
     .catch(error => {
         console.error('Error filtering cars:', error);
-        document.getElementById('showAllCarsFiltered').innerHTML = '<div class="alert alert-danger">Error loading filtered cars.</div>';
+        document.getElementById('showAllCarsFiltered').innerHTML = '<div>Error loading filtered cars.</div>';
     });
 }
 
@@ -454,17 +425,17 @@ function hideFiltersCars(event) {
 }
 
 const search = document.querySelector('#searchCar');
-const carTableBody = document.querySelector('#showAllCars');
+const allCars = document.querySelector('#showAllCars');
 search.addEventListener('input', () => {
 
     // This function filters the car table based on the search input.
     // It listens for input events on the search field and hides rows that do not match the search criteria.
     const searchValue = search.value.toLowerCase();
-    const rows = carTableBody.querySelectorAll('tr');    
+    const cars = allCars.querySelectorAll('div.col');    
 
-    rows.forEach(car => {
-        const brandRow = car.querySelector('td:nth-child(1)');
-        const modelRow = car.querySelector('td:nth-child(2)');
+    cars.forEach(car => {
+        const brandRow = car.querySelector('h5');
+        const modelRow = car.querySelector('p');
 
         // This line below is useful for ensuring that the search functionality does not break.
         if (brandRow && modelRow) {

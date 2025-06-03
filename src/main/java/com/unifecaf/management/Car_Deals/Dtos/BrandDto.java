@@ -1,4 +1,4 @@
-package com.unifecaf.management.Car_Deals.Dto;
+package com.unifecaf.management.Car_Deals.Dtos;
 
 import jakarta.validation.constraints.*;
 

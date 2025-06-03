@@ -16,7 +16,9 @@ public class CarDealsApplication {
 	@Bean
 	CommandLineRunner initialization () {
 		return args -> {
-			System.out.println("Click in the link to access the app: http://localhost:8080/cars.html");
+
+			System.out.println();
+			System.out.println("Access the app here: http://localhost:8080/cars.html");
 		};
 	}
 }
