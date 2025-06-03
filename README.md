@@ -19,6 +19,7 @@ Car Deals Manager is a RestFul API application developed using **Java**, **Sprin
 - **Maven** (to build and run the project)
 
 ### Tech Stack
+
 - **Spring Boot** – for building the backend
 - **Spring Data JDBC** – for interacting with the database
 - **H2 Database** – in-memory testing database (can be replaced with a persistent one)
@@ -47,7 +48,7 @@ Car Deals Manager is a RestFul API application developed using **Java**, **Sprin
    http://localhost:8080/cars.html
    ```
 
-## 📚 Controller Endpoints
+## 📚 Controller - Some Endpoints
 
 ```
 | HTTP Method | Endpoint                       | Description                                             |
@@ -57,8 +58,5 @@ Car Deals Manager is a RestFul API application developed using **Java**, **Sprin
 | POST        | `/cars/create_car`             | Create a new car with associated brand info             |
 | PUT         | `/cars/update_car/{id}`        | Update a car and its brand by ID                        |
 | DELETE      | `/cars/delete_car/{id}`        | Delete a car by ID                                      |
-| GET         | `/cars/all_brands`             | List all registered car brands                          |
-| GET         | `/cars/filter_brand/{brand}`   | Filter cars by brand name                               |
-| GET         | `/cars/filter_model/{model}`   | Filter cars by model name                               |
-| GET         | `/cars/filter_cars`            | Filter cars by brand, model, fabrication year, and status |
+(...)
 ```

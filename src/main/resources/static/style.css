@@ -1,0 +1,94 @@
+body {
+    background-color: #ffffff;
+    padding: 2rem;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #212529;
+}
+
+.form-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+    background-color: #ffffff;
+    padding: 2.5rem 2rem;
+    border-radius: 1.2rem;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+    max-width: 600px;
+    width: 95%;
+    transition: box-shadow 0.2s;
+}
+
+.form-popup:focus-within {
+    box-shadow: 0 12px 48px rgba(13, 110, 253, 0.15);
+}
+
+.btn-close-custom {
+    float: right;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #adb5bd;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.btn-close-custom:hover {
+    color: #0d6efd;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem 2rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 600px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .form-popup {
+        padding: 1.2rem 0.5rem;
+        max-width: 98vw;
+    }
+}
+
+#addNewCar {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: linear-gradient(90deg, #0d6efd 60%, #0a58ca 100%);
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(13, 110, 253, 0.08);
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+#addNewCar:hover {
+    background: linear-gradient(90deg, #0a58ca 60%, #0d6efd 100%);
+    box-shadow: 0 4px 16px rgba(13, 110, 253, 0.12);
+}
+
+#addNewCar i {
+    margin-right: 7px;
+    font-size: 1.1em;
+    vertical-align: middle;
+}
+
+h2 {
+    margin-top: 2rem;
+    margin-bottom: 1.2rem;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #0d6efd;
+    letter-spacing: 0.5px;
+}

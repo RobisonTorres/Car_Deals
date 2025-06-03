@@ -56,6 +56,7 @@ function createCar(event) {
         name: brandInput
     }
     const car = {
+        image: document.getElementById('image').value,
         model: document.getElementById('model').value,
         fabrication: parseInt(document.getElementById('fabrication').value, 10),
         color: document.getElementById('color').value,
@@ -107,28 +108,56 @@ function showAllCars() {
     .then(data => {
         let output = ``;
         data.forEach(car => {
-            output += `          
-                        <div class="col">
-                            <div class="card" style="width: auto; height: 25rem;">
-                                <img src="imgs/mercedes.jpg" class="card-img-top" alt="mercedes">
-                                <div class="card-body">
-                                    <h5 class="card-title">${car.brand.name}    ${car.price}</h5>
-                                    <p class="card-text">${car.model}    ${car.color}    ${car.status}</p>
-                            </div>
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">${car.mileage} km    ${car.plate}</li>
-                                    <li class="list-group-item">${car.fabrication ?? 'N/A'}</li>
-                                </ul>
-                                <div class="card-body">
-                                    <button id="editCar" onclick="editCarLoad(${car.id})">Edit</button>
-                                    <button onclick="deleteCar(${car.id})">Delete</button>
-                                    <tr id="car-${car.id}">
-                                </div>
-                            </div>
+            output += `
+            <div id="cards" class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-lg rounded-3 overflow-hidden">
+                    <div class="position-relative">
+                        <img src="${car.image}"
+                            class="card-img-top img-fluid object-fit-cover"
+                            alt="Car image"
+                            style="height: 200px;"
+                            onerror="this.onerror=null; this.src='imgs/car_deals.png';">
+                        <span class="badge bg-danger position-absolute top-0 start-0 m-2 rounded-pill px-3 py-2 fs-6">
+                            $${car.price}
+                        </span>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-dark mb-1">
+                            ${car.model}
+                        </h5>
+                        <p class="card-subtitle text-muted small mb-3">
+                            ${car.brand.name} • ${car.color}
+                        </p>
+                        <ul class="list-group list-group-flush border-top border-bottom my-2">
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
+                                <span class="text-secondary"><i class="bi bi-speedometer2 me-2"></i>Mileage:</span>
+                                <span class="fw-bold">${car.mileage} km</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
+                                <span class="text-secondary"><i class="bi bi-tag me-2"></i>Plate:</span>
+                                <span class="fw-bold">${car.plate}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
+                                <span class="text-secondary"><i class="bi bi-calendar me-2"></i>Year:</span>
+                                <span class="fw-bold">${car.fabrication ?? 'N/A'}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
+                                <span class="text-secondary"><i class="bi bi-info-circle me-2"></i>Status:</span>
+                                <span class="fw-bold text-success">${car.status}</span>
+                            </li>
+                        </ul>
+                        <div class="d-flex justify-content-center gap-2 mt-auto pt-3">
+                            <button class="btn btn-outline-primary flex-grow-1" onclick="editCarLoad(${car.id})">
+                                <i class="bi bi-pencil me-1"></i> Edit
+                            </button>
+                            <button class="btn btn-outline-danger flex-grow-1" onclick="deleteCar(${car.id})">
+                                <i class="bi bi-trash me-1"></i> Delete
+                            </button>
                         </div>
-                        <br>
-                        `;
-                    });
+                    </div>
+                </div>
+            </div>
+            `;});
         document.getElementById('showAllCars').innerHTML = output;
     })
     .catch(error => {
@@ -143,7 +172,7 @@ function hideAllCars() {
     document.getElementById('showAllCars').innerHTML = '';
 }
 
-function editCarLoad(carId) {
+async function editCarLoad(carId) {
 
     // This function is called when the "Edit" button is clicked. It fetches the car data
     // from the server and populates the form fields with the car's current data.
@@ -151,8 +180,8 @@ function editCarLoad(carId) {
     displayFormUpdate();
     const input = document.getElementById('brand_update');
     if (input.options.length <= 1) {
-        // If the brand selection input is empty, it fetches the available brands.
-        brandSelect(input);
+        // It ensures that the brand selection input is populated with available brands.
+        await brandSelect(input, 'all_brands');
     }
     carId = parseInt(carId, 10);
     fetch(`http://localhost:8080/cars/get_car/${carId}`, {
@@ -163,6 +192,7 @@ function editCarLoad(carId) {
     .then(car => {
         let brandSelect = car.brand.id;
         document.getElementById('brand_update').value = brandSelect;
+        document.getElementById('image_update').value = car.image;
         document.getElementById('model_update').value = car.model;
         document.getElementById('fabrication_update').value = car.fabrication;
         document.getElementById('color_update').value = car.color;
@@ -193,6 +223,7 @@ function updateCar(event) {
     };
     const car = {
         id: document.getElementById('carId').value,
+        image: document.getElementById('image_update').value,
         model: document.getElementById('model_update').value,
         fabrication: parseInt(document.getElementById('fabrication_update').value, 10),
         color: document.getElementById('color_update').value,
@@ -260,7 +291,8 @@ function brandSelect(brandInput, filter_brand) {
 
     // This function fetches all car brands from the server and populates the brand selection input
     // with the available brands. It also adds an "Other" option to allow users to enter a new brand.
-    fetch(`http://localhost:8080/cars/${filter_brand}`, {
+    // It returns a promise that resolves when the brands are successfully fetched and added to the input.
+    return fetch(`http://localhost:8080/cars/${filter_brand}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
     })
@@ -305,7 +337,6 @@ function modelSelect() {
     const select = document.getElementById('filter_model');
     select.innerHTML = `<option value="" disabled selected hidden>Model</option>`;
     const brandId = document.getElementById('filter_brand').value;
-
     fetch(`http://localhost:8080/cars/filter_brand/${brandId}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
@@ -335,7 +366,6 @@ function yearStatusSelect() {
     select_year.innerHTML = `<option value="" disabled selected hidden>Year</option>`;
     select_status.innerHTML = `<option value="" disabled selected hidden>Status</option>`;
     const model = document.getElementById('filter_model').value;
-
     fetch(`http://localhost:8080/cars/filter_model/${model}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
@@ -372,7 +402,6 @@ function filterCars(event) {
     const model = document.getElementById('filter_model').value;
     const fabrication = parseInt(document.getElementById('filter_year').value, 10);
     const status = document.getElementById('filter_status').value;
-
     if (!brand || !model || !fabrication || !status) {
         alert('Please select all filter criteria.');
         return;
@@ -385,28 +414,56 @@ function filterCars(event) {
     .then(data => {
         let output = ``;
         data.forEach(car => {
-            output += `          
-                        <div class="col">
-                            <div class="card" style="width: auto; height: 25rem;">
-                                <img src="imgs/mercedes.jpg" class="card-img-top" alt="mercedes">
-                                <div class="card-body">
-                                    <h5 class="card-title">${car.brand.name}    ${car.price}</h5>
-                                    <p class="card-text">${car.model}    ${car.color}    ${car.status}</p>
-                            </div>
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">${car.mileage} km    ${car.plate}</li>
-                                    <li class="list-group-item">${car.fabrication ?? 'N/A'}</li>
-                                </ul>
-                                <div class="card-body">
-                                    <button id="editCar" onclick="editCarLoad(${car.id})">Edit</button>
-                                    <button onclick="deleteCar(${car.id})">Delete</button>
-                                    <tr id="car-${car.id}">
-                                </div>
-                            </div>
+                    output += `
+            <div id="cards" class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-lg rounded-3 overflow-hidden">
+                    <div class="position-relative">
+                        <img src="${car.image}"
+                            class="card-img-top img-fluid object-fit-cover"
+                            alt="Car image"
+                            style="height: 200px;"
+                            onerror="this.onerror=null; this.src='imgs/car_deals.png';">
+                        <span class="badge bg-danger position-absolute top-0 start-0 m-2 rounded-pill px-3 py-2 fs-6">
+                            $${car.price}
+                        </span>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-dark mb-1">
+                            ${car.model}
+                        </h5>
+                        <p class="card-subtitle text-muted small mb-3">
+                            ${car.brand.name} • ${car.color}
+                        </p>
+                        <ul class="list-group list-group-flush border-top border-bottom my-2">
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
+                                <span class="text-secondary"><i class="bi bi-speedometer2 me-2"></i>Mileage:</span>
+                                <span class="fw-bold">${car.mileage} km</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
+                                <span class="text-secondary"><i class="bi bi-tag me-2"></i>Plate:</span>
+                                <span class="fw-bold">${car.plate}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
+                                <span class="text-secondary"><i class="bi bi-calendar me-2"></i>Year:</span>
+                                <span class="fw-bold">${car.fabrication ?? 'N/A'}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
+                                <span class="text-secondary"><i class="bi bi-info-circle me-2"></i>Status:</span>
+                                <span class="fw-bold text-success">${car.status}</span>
+                            </li>
+                        </ul>
+                        <div class="d-flex justify-content-center gap-2 mt-auto pt-3">
+                            <button class="btn btn-outline-primary flex-grow-1" onclick="editCarLoad(${car.id})">
+                                <i class="bi bi-pencil me-1"></i> Edit
+                            </button>
+                            <button class="btn btn-outline-danger flex-grow-1" onclick="deleteCar(${car.id})">
+                                <i class="bi bi-trash me-1"></i> Delete
+                            </button>
                         </div>
-                        <br>
-                        `;
-                    });
+                    </div>
+                </div>
+            </div>
+            `;});
         document.getElementById('showAllCarsFiltered').innerHTML = output;
     })
     .catch(error => {
@@ -431,12 +488,10 @@ search.addEventListener('input', () => {
     // This function filters the car table based on the search input.
     // It listens for input events on the search field and hides rows that do not match the search criteria.
     const searchValue = search.value.toLowerCase();
-    const cars = allCars.querySelectorAll('div.col');    
-
+    const cars = allCars.querySelectorAll('div#cards');    
     cars.forEach(car => {
         const brandRow = car.querySelector('h5');
         const modelRow = car.querySelector('p');
-
         // This line below is useful for ensuring that the search functionality does not break.
         if (brandRow && modelRow) {
             const carBrand = brandRow.textContent.toLowerCase();

@@ -1,0 +1,3 @@
+2025-06-03 16:02:48.522897-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "BRAND" not found; SQL statement:
+Select * From Brand [42102-224]

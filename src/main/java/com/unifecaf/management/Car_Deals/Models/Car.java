@@ -11,6 +11,7 @@ public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private String image;
     private String model;
     private Integer fabrication;
     private String color;
@@ -28,24 +29,20 @@ public class Car {
 
     }
 
-    public Car(Integer id, String model, Integer fabrication, String color, Integer mileage, String plate, Double price, CarStatus status, Brand brand) {
-        this.id = id;
-        this.model = model;
-        this.fabrication = fabrication;
-        this.color = color;
-        this.mileage = mileage;
-        this.plate = plate;
-        this.price = price;
-        this.status = status;
-        this.brand = brand;
-    }
-
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getModel() {

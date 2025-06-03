@@ -8,6 +8,8 @@ public class CarDto {
 
     @Valid
 
+    private String image;
+
     @NotEmpty(message = "model is mandatory")
     @NotBlank(message = "model is mandatory")
     private String model;
@@ -34,6 +36,14 @@ public class CarDto {
     private String status;
 
     private Integer brand_id;
+
+    public @Valid String getImage() {
+        return image;
+    }
+
+    public void setImage(@Valid String image) {
+        this.image = image;
+    }
 
     public String getModel() {
         return model;
@@ -98,4 +108,5 @@ public class CarDto {
     public void setBrand_id(Integer brand_id) {
         this.brand_id = brand_id;
     }
+
 }
