@@ -29,7 +29,7 @@ Car Deals Manager is a RestFul API application developed using **Java**, **Sprin
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/Car_Deals_Manager.git
+   git clone https://github.com/RobisonTorres/Car_Deals.git
    cd Car_Deals_Manager
    ```
 
