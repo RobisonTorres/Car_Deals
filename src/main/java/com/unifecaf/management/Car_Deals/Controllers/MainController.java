@@ -48,19 +48,18 @@ public class MainController {
     @PostMapping("/create_car")
     public ResponseEntity<Car> createCar(@Valid @RequestBody BCWrapperDto bcWrapperDto) {
         // Creates a new car and its associated brand. If the brand does not exist, it saves it.
-        Car car = new Car();
         CarDto carDto = bcWrapperDto.getCarDto();
-        modelMapper.map(carDto, car);
+        Car car = modelMapper.map(carDto, Car.class);
 
-        Brand brand = new Brand();
         BrandDto brandDto = bcWrapperDto.getBrandDto();
-        modelMapper.map(brandDto, brand);
+        Brand brand = modelMapper.map(brandDto, Brand.class);
+        
+        // Check if the brand already exists in the database.
+        // If it does, associate the existing brand with the car; otherwise, save the new brand.
+        Brand checkBrand = servicesCarDeals.checkExistingBrand(brand.getName());
+        car.setBrand(checkBrand == null ? brand : checkBrand);
+        if (checkBrand == null) servicesCarDeals.saveBrand(brand);
 
-        if (!servicesCarDeals.checkExistingBrand(brand.getName())){
-            servicesCarDeals.saveBrand(brand);
-        }
-
-        car.setBrand(brand);
         servicesCarDeals.saveCar(car);
         return ResponseEntity.ok().build();
     }
@@ -72,15 +71,13 @@ public class MainController {
         CarDto carDto = bcWrapperDto.getCarDto();
         modelMapper.map(carDto, car);
 
-        Brand brand = new Brand();
         BrandDto brandDto = bcWrapperDto.getBrandDto();
-        modelMapper.map(brandDto, brand);
+        Brand brand = modelMapper.map(brandDto, Brand.class);
+        Brand checkBrand = servicesCarDeals.checkExistingBrand(brand.getName());
 
-        if (!servicesCarDeals.checkExistingBrand(brand.getName())){
-            servicesCarDeals.saveBrand(brand);
-        }
+        car.setBrand(checkBrand == null ? brand : checkBrand);
+        if (checkBrand == null) servicesCarDeals.saveBrand(brand);
 
-        car.setBrand(brand);
         servicesCarDeals.saveCar(car);
         return ResponseEntity.ok().build();
     }
@@ -126,5 +123,4 @@ public class MainController {
         // Filters cars based on brand, model, fabrication year, and status.
         return servicesCarDeals.filterCars(brand, model, fabrication, status);
     }
-
 }

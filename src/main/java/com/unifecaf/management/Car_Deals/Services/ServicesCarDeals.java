@@ -51,10 +51,10 @@ public class ServicesCarDeals {
         return repositoryBrand.findBrandsWithCarsAvailable();
     }
 
-    public boolean checkExistingBrand(String brand) {
+    public Brand checkExistingBrand(String brand) {
         // This function checks if a brand exists in the database.
-        // It returns true if the brand exists, false otherwise.
-        return repositoryBrand.findByName(brand).isPresent();
+        // It returns the Brand object if it exists, otherwise returns null.
+        return repositoryBrand.findByName(brand);
     }
 
     public Brand saveBrand(Brand brand) {
