@@ -56,7 +56,6 @@ function createCar(event) {
         name: brandInput
     }
     const car = {
-        image: document.getElementById('image').value,
         model: document.getElementById('model').value,
         fabrication: parseInt(document.getElementById('fabrication').value, 10),
         color: document.getElementById('color').value,
@@ -69,9 +68,14 @@ function createCar(event) {
         alert('Please fill in all fields.');    
         return;
     };
+    const photos = [
+        {photo: document.getElementById('main_image').value},
+        {photo: document.getElementById('secondary_image').value}
+    ];
     const bcWrapperDtoCreate = {
         brandDto: brand,
-        carDto: car
+        carDto: car,
+        photoDtos: photos
     }; 
     fetch('http://localhost:8080/cars/create_car', {
         method: 'POST',
@@ -109,54 +113,78 @@ function showAllCars() {
         let output = ``;
         data.forEach(car => {
             output += `
-            <div id="cards" class="col-md-4 mb-4">
-                <div class="card h-100 border-0 shadow-lg rounded-3 overflow-hidden">
-                    <div class="position-relative">
-                        <img src="${car.image}"
-                            class="card-img-top img-fluid object-fit-cover"
-                            alt="Car image"
-                            style="height: 200px;"
-                            onerror="this.onerror=null; this.src='imgs/car_deals.png';">
-                        <span class="badge bg-danger position-absolute top-0 start-0 m-2 rounded-pill px-3 py-2 fs-6">
-                            $${car.price}
-                        </span>
-                    </div>
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title text-dark mb-1">
-                            ${car.model}
-                        </h5>
-                        <p class="card-subtitle text-muted small mb-3">
-                            ${car.brand.name} • ${car.color}
-                        </p>
-                        <ul class="list-group list-group-flush border-top border-bottom my-2">
-                            <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
+                    <div id="cards" class="col-md-4 mb-4">
+                        <div class="card h-100 border-0 shadow-lg rounded-3 overflow-hidden">
+                            <div class="position-relative">
+                            <div id="carouselExampleIndicators${car.id}" class="carousel slide">
+                                <div class="carousel-indicators">
+                                <button type="button" data-bs-target="#carouselExampleIndicators${car.id}" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                                <button type="button" data-bs-target="#carouselExampleIndicators${car.id}" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                                </div>
+                                <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="${car.photos && car.photos.length > 0 ? car.photos[0].photo : 'imgs/car_deals_logo.png'}"
+                                        class="card-img-top img-fluid object-fit-cover"
+                                        alt="Car image"
+                                        style="height: 200px;"
+                                        onerror="this.onerror=null; this.src='imgs/car_deals_logo.png';">
+                                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 rounded-pill px-3 py-2 fs-6">
+                                    $${car.price}
+                                    </span>
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="${car.photos && car.photos.length > 1 ? car.photos[1].photo : 'imgs/car_deals_logo.png'}"
+                                        class="card-img-top img-fluid object-fit-cover"
+                                        alt="Car image"
+                                        style="height: 200px;"
+                                        onerror="this.onerror=null; this.src='imgs/car_deals_logo.png';">
+                                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 rounded-pill px-3 py-2 fs-6">
+                                    $${car.price}
+                                    </span>
+                                </div>
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators${car.id}" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators${car.id}" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-dark mb-1">${car.model}</h5>
+                            <p class="card-subtitle text-muted small mb-3">${car.brand.name} • ${car.color}</p>
+                            <ul class="list-group list-group-flush border-top border-bottom my-2">
+                                <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
                                 <span class="text-secondary"><i class="bi bi-speedometer2 me-2"></i>Mileage:</span>
                                 <span class="fw-bold">${car.mileage} km</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
                                 <span class="text-secondary"><i class="bi bi-tag me-2"></i>Plate:</span>
                                 <span class="fw-bold">${car.plate}</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
                                 <span class="text-secondary"><i class="bi bi-calendar me-2"></i>Year:</span>
                                 <span class="fw-bold">${car.fabrication ?? 'N/A'}</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
                                 <span class="text-secondary"><i class="bi bi-info-circle me-2"></i>Status:</span>
                                 <span class="fw-bold text-success">${car.status}</span>
-                            </li>
-                        </ul>
-                        <div class="d-flex justify-content-center gap-2 mt-auto pt-3">
-                            <button class="btn btn-outline-primary flex-grow-1" onclick="editCarLoad(${car.id})">
+                                </li>
+                            </ul>
+                            <div class="d-flex justify-content-center gap-2 mt-auto pt-3">
+                                <button class="btn btn-outline-primary flex-grow-1" onclick="editCarLoad(${car.id})">
                                 <i class="bi bi-pencil me-1"></i> Edit
-                            </button>
-                            <button class="btn btn-outline-danger flex-grow-1" onclick="deleteCar(${car.id})">
+                                </button>
+                                <button class="btn btn-outline-danger flex-grow-1" onclick="deleteCar(${car.id})">
                                 <i class="bi bi-trash me-1"></i> Delete
-                            </button>
+                                </button>
+                            </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
             `;});
         document.getElementById('showAllCars').innerHTML = output;
     })
@@ -191,8 +219,12 @@ async function editCarLoad(carId) {
     .then(response => response.json())    
     .then(car => {
         let brandSelect = car.brand.id;
+        document.getElementById('carId').value = car.id;
         document.getElementById('brand_update').value = brandSelect;
-        document.getElementById('image_update').value = car.image;
+        document.getElementById('main_image_update').value = car.photos[0].photo;
+        document.getElementById('main_image_id').value = car.photos[0].id;
+        document.getElementById('secondary_image_update').value = car.photos[1].photo;
+        document.getElementById('secondary_image_id').value = car.photos[1].id;
         document.getElementById('model_update').value = car.model;
         document.getElementById('fabrication_update').value = car.fabrication;
         document.getElementById('color_update').value = car.color;
@@ -200,11 +232,13 @@ async function editCarLoad(carId) {
         document.getElementById('plate_update').value = car.plate;
         document.getElementById('price_update').value = car.price;
         document.getElementById('status_update').value = car.status;
-        document.getElementById('carId').value = car.id;
     })
+    
+    console.log(car)
+    /*
     .catch(error => {
         console.error("Error fetching car data:", error);
-    });
+    });*/
 }
 
 function updateCar(event) {
@@ -223,7 +257,6 @@ function updateCar(event) {
     };
     const car = {
         id: document.getElementById('carId').value,
-        image: document.getElementById('image_update').value,
         model: document.getElementById('model_update').value,
         fabrication: parseInt(document.getElementById('fabrication_update').value, 10),
         color: document.getElementById('color_update').value,
@@ -236,9 +269,18 @@ function updateCar(event) {
         alert('Please fill in all fields.');
         return;
     };
+    const photos = [
+        {   
+            id: parseInt(document.getElementById('main_image_id').value, 10), 
+            photo: document.getElementById('main_image_update').value},
+        {   
+            id: parseInt(document.getElementById('secondary_image_id').value, 10),
+            photo: document.getElementById('secondary_image_update').value}
+    ];
     const brandCarWrapperUpdate = {
         brandDto: brand,
-        carDto: car
+        carDto: car, 
+        photoDtos: photos
     };   
     fetch(`http://localhost:8080/cars/update_car/${car.id}`, {
         method: 'PUT',
@@ -415,54 +457,78 @@ function filterCars(event) {
         let output = ``;
         data.forEach(car => {
                     output += `
-            <div id="cards" class="col-md-4 mb-4">
-                <div class="card h-100 border-0 shadow-lg rounded-3 overflow-hidden">
-                    <div class="position-relative">
-                        <img src="${car.image}"
-                            class="card-img-top img-fluid object-fit-cover"
-                            alt="Car image"
-                            style="height: 200px;"
-                            onerror="this.onerror=null; this.src='imgs/car_deals.png';">
-                        <span class="badge bg-danger position-absolute top-0 start-0 m-2 rounded-pill px-3 py-2 fs-6">
-                            $${car.price}
-                        </span>
-                    </div>
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title text-dark mb-1">
-                            ${car.model}
-                        </h5>
-                        <p class="card-subtitle text-muted small mb-3">
-                            ${car.brand.name} • ${car.color}
-                        </p>
-                        <ul class="list-group list-group-flush border-top border-bottom my-2">
-                            <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
+                    <div id="cards" class="col-md-4 mb-4">
+                        <div class="card h-100 border-0 shadow-lg rounded-3 overflow-hidden">
+                            <div class="position-relative">
+                            <div id="carouselExampleIndicators${car.id}" class="carousel slide">
+                                <div class="carousel-indicators">
+                                <button type="button" data-bs-target="#carouselExampleIndicators${car.id}" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                                <button type="button" data-bs-target="#carouselExampleIndicators${car.id}" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                                </div>
+                                <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="${car.photos && car.photos.length > 0 ? car.photos[0].photo : 'imgs/car_deals_logo.png'}"
+                                        class="card-img-top img-fluid object-fit-cover"
+                                        alt="Car image"
+                                        style="height: 200px;"
+                                        onerror="this.onerror=null; this.src='imgs/car_deals_logo.png';">
+                                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 rounded-pill px-3 py-2 fs-6">
+                                    $${car.price}
+                                    </span>
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="${car.photos && car.photos.length > 1 ? car.photos[1].photo : 'imgs/car_deals_logo.png'}"
+                                        class="card-img-top img-fluid object-fit-cover"
+                                        alt="Car image"
+                                        style="height: 200px;"
+                                        onerror="this.onerror=null; this.src='imgs/car_deals_logo.png';">
+                                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 rounded-pill px-3 py-2 fs-6">
+                                    $${car.price}
+                                    </span>
+                                </div>
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators${car.id}" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators${car.id}" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-dark mb-1">${car.model}</h5>
+                            <p class="card-subtitle text-muted small mb-3">${car.brand.name} • ${car.color}</p>
+                            <ul class="list-group list-group-flush border-top border-bottom my-2">
+                                <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
                                 <span class="text-secondary"><i class="bi bi-speedometer2 me-2"></i>Mileage:</span>
                                 <span class="fw-bold">${car.mileage} km</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
                                 <span class="text-secondary"><i class="bi bi-tag me-2"></i>Plate:</span>
                                 <span class="fw-bold">${car.plate}</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
                                 <span class="text-secondary"><i class="bi bi-calendar me-2"></i>Year:</span>
                                 <span class="fw-bold">${car.fabrication ?? 'N/A'}</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-0">
                                 <span class="text-secondary"><i class="bi bi-info-circle me-2"></i>Status:</span>
                                 <span class="fw-bold text-success">${car.status}</span>
-                            </li>
-                        </ul>
-                        <div class="d-flex justify-content-center gap-2 mt-auto pt-3">
-                            <button class="btn btn-outline-primary flex-grow-1" onclick="editCarLoad(${car.id})">
+                                </li>
+                            </ul>
+                            <div class="d-flex justify-content-center gap-2 mt-auto pt-3">
+                                <button class="btn btn-outline-primary flex-grow-1" onclick="editCarLoad(${car.id})">
                                 <i class="bi bi-pencil me-1"></i> Edit
-                            </button>
-                            <button class="btn btn-outline-danger flex-grow-1" onclick="deleteCar(${car.id})">
+                                </button>
+                                <button class="btn btn-outline-danger flex-grow-1" onclick="deleteCar(${car.id})">
                                 <i class="bi bi-trash me-1"></i> Delete
-                            </button>
+                                </button>
+                            </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
             `;});
         document.getElementById('showAllCarsFiltered').innerHTML = output;
     })

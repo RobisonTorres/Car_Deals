@@ -1,6 +1,10 @@
 package com.unifecaf.management.Car_Deals.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 // Car.java - Entity class representing a car.
 // This class is mapped to the "cars" table in the database and contains fields for car ID, model, fabrication year, color, mileage, plate, price, status, and associated brand.
@@ -11,7 +15,6 @@ public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String image;
     private String model;
     private Integer fabrication;
     private String color;
@@ -25,8 +28,25 @@ public class Car {
     @JoinColumn(name = "brand_id", nullable = false)
     private Brand brand;
 
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Photo> photos = new ArrayList<>();
+
     public Car() {
 
+    }
+
+    public Car(Integer id, String model, Integer fabrication, String color, Integer mileage, String plate, Double price, CarStatus status, Brand brand, List<Photo> photos) {
+        this.id = id;
+        this.model = model;
+        this.fabrication = fabrication;
+        this.color = color;
+        this.mileage = mileage;
+        this.plate = plate;
+        this.price = price;
+        this.status = status;
+        this.brand = brand;
+        this.photos = photos;
     }
 
     public Integer getId() {
@@ -35,14 +55,6 @@ public class Car {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
     }
 
     public String getModel() {
@@ -107,6 +119,14 @@ public class Car {
 
     public void setBrand(Brand brand) {
         this.brand = brand;
+    }
+
+    public List<Photo> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<Photo> photos) {
+        this.photos = photos;
     }
 
     public enum CarStatus {

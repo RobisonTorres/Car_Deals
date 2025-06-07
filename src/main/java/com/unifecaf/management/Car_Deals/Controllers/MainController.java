@@ -2,9 +2,11 @@ package com.unifecaf.management.Car_Deals.Controllers;
 
 import com.unifecaf.management.Car_Deals.Dtos.BCWrapperDto;
 import com.unifecaf.management.Car_Deals.Dtos.BrandDto;
+import com.unifecaf.management.Car_Deals.Dtos.PhotoDto;
+import com.unifecaf.management.Car_Deals.Dtos.CarDto;
 import com.unifecaf.management.Car_Deals.Models.Brand;
 import com.unifecaf.management.Car_Deals.Models.Car;
-import com.unifecaf.management.Car_Deals.Dtos.CarDto;
+import com.unifecaf.management.Car_Deals.Models.Photo;
 import com.unifecaf.management.Car_Deals.Services.ServicesCarDeals;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -61,6 +63,14 @@ public class MainController {
         if (checkBrand == null) servicesCarDeals.saveBrand(brand);
 
         servicesCarDeals.saveCar(car);
+
+        List<PhotoDto> photos = bcWrapperDto.getPhotoDtos();
+        for (PhotoDto p: photos) {
+            Photo photo = modelMapper.map(p, Photo.class);
+            photo.setCar(car);
+            servicesCarDeals.savePhoto(photo);
+        }
+
         return ResponseEntity.ok().build();
     }
 
@@ -79,6 +89,15 @@ public class MainController {
         if (checkBrand == null) servicesCarDeals.saveBrand(brand);
 
         servicesCarDeals.saveCar(car);
+
+        List<PhotoDto> photos = bcWrapperDto.getPhotoDtos();
+        for (PhotoDto p: photos) {
+            Photo photo = servicesCarDeals.getPhotoById(p.getId());
+            modelMapper.map(p, photo);
+            photo.setCar(car);
+            servicesCarDeals.savePhoto(photo);
+        }
+
         return ResponseEntity.ok().build();
     }
 

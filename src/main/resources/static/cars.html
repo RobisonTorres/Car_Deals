@@ -121,8 +121,12 @@
           </select>
         </div>
         <div>
-          <label for="image">Image</label>
-          <input type="text" id="image" placeholder="URL Image" class="form-control" />
+          <label for="main_image">Main Image</label>
+          <input type="text" id="main_image" placeholder="URL Image" class="form-control" />
+        </div>
+        <div>
+          <label for="secondary_image">Secondary Image</label>
+          <input type="text" id="secondary_image" placeholder="URL Image" class="form-control" />
         </div>
       </div>
       <div class="d-flex justify-content-center gap-2 mt-auto pt-3">
@@ -177,9 +181,15 @@
             <option value="SECOND_HAND">SECOND_HAND</option>
           </select>
         </div>
+        <input type="hidden" id="main_image_id" />
         <div>
-          <label for="image_update">Image</label>
-          <input type="text" id="image_update" placeholder="URL Image" class="form-control" />
+          <label for="main_image_update">Main Image</label>
+          <input type="text" id="main_image_update" placeholder="URL Image" class="form-control" />
+        </div>
+        <input type="hidden" id="secondary_image_id" />
+        <div>
+          <label for="secondary_image_update">Secondary Image</label>
+          <input type="text" id="secondary_image_update" placeholder="URL Image" class="form-control" />
         </div>
       </div>
       <div class="d-flex justify-content-center gap-2 mt-auto pt-3">

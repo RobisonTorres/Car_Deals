@@ -2,8 +2,10 @@ package com.unifecaf.management.Car_Deals.Services;
 
 import com.unifecaf.management.Car_Deals.Models.Brand;
 import com.unifecaf.management.Car_Deals.Models.Car;
+import com.unifecaf.management.Car_Deals.Models.Photo;
 import com.unifecaf.management.Car_Deals.Repositories.RepositoryBrand;
 import com.unifecaf.management.Car_Deals.Repositories.RepositoryCarDeals;
+import com.unifecaf.management.Car_Deals.Repositories.RepositoryPhotos;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -13,12 +15,15 @@ public class ServicesCarDeals {
     // Dependence injection for RepositoryCarDeals and RepositoryBrand.
     private final RepositoryCarDeals repositoryCarDeals;
     private final RepositoryBrand repositoryBrand;
+    private final RepositoryPhotos repositoryPhotos;
 
     public ServicesCarDeals(RepositoryCarDeals repositoryCarDeals,
-                            RepositoryBrand repositoryBrand) {
+                            RepositoryBrand repositoryBrand,
+                            RepositoryPhotos repositoryPhotos) {
 
         this.repositoryCarDeals = repositoryCarDeals;
         this.repositoryBrand = repositoryBrand;
+        this.repositoryPhotos = repositoryPhotos;
     }
 
     public Car getCarById(Integer id) {
@@ -76,5 +81,14 @@ public class ServicesCarDeals {
         // This function filters Cars based on brand, model, and status.
         // It returns a list of Cars that match the given criteria.
         return repositoryCarDeals.findCarsByFilters(brand, model, fabrication, status);
+    }
+
+    public Photo savePhoto(Photo photo) {
+        // This function...
+        return repositoryPhotos.save(photo);
+    }
+
+    public Photo getPhotoById(Integer id) {
+        return repositoryPhotos.findById(id).orElse(null);
     }
 }

@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS brands (
 
 CREATE TABLE IF NOT EXISTS cars (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    image VARCHAR(2083),
     model VARCHAR(150) NOT NULL,
     fabrication INT,
     color VARCHAR(50),
@@ -17,6 +16,13 @@ CREATE TABLE IF NOT EXISTS cars (
     status VARCHAR(20),
     brand_id INT NOT NULL,
     FOREIGN KEY (brand_id) REFERENCES brands(id)
+);
+
+CREATE TABLE IF NOT EXISTS photos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    photo VARCHAR(2083),
+    car_id INT NOT NULL,
+    FOREIGN KEY (car_id) REFERENCES cars(id)
 );
 /*
 -- Insert initial brand data
