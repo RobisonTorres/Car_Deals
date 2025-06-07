@@ -1,5 +1,7 @@
 package com.unifecaf.management.Car_Deals.Dtos;
 
+// PhotoDto.java - Data Transfer Object for Photo entity.
+// This class is used to transfer photo data between the client and server without exposing the entire Photo entity.
 public class PhotoDto {
 
     Integer id;

@@ -64,6 +64,8 @@ public class MainController {
 
         servicesCarDeals.saveCar(car);
 
+        // Save the photos associated with the car.
+        // Each photo is mapped from the DTO to the Photo entity and associated with the car.
         List<PhotoDto> photos = bcWrapperDto.getPhotoDtos();
         for (PhotoDto p: photos) {
             Photo photo = modelMapper.map(p, Photo.class);
@@ -90,6 +92,9 @@ public class MainController {
 
         servicesCarDeals.saveCar(car);
 
+        // Update the photos associated with the car.
+        // Each photo is mapped from the DTO to the Photo entity and associated with the car.
+        // Existing photos are updated, and new photos are saved.
         List<PhotoDto> photos = bcWrapperDto.getPhotoDtos();
         for (PhotoDto p: photos) {
             Photo photo = servicesCarDeals.getPhotoById(p.getId());

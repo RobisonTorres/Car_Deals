@@ -3,6 +3,8 @@ package com.unifecaf.management.Car_Deals.Models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+// Photo.java - Entity class representing a photo of a car.
+// This class is mapped to the "photos" table in the database and contains fields for photo ID, photo URL, and the associated car.
 @Entity
 @Table(name = "photos")
 public class Photo {

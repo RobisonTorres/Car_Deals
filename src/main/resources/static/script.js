@@ -233,12 +233,9 @@ async function editCarLoad(carId) {
         document.getElementById('price_update').value = car.price;
         document.getElementById('status_update').value = car.status;
     })
-    
-    console.log(car)
-    /*
     .catch(error => {
         console.error("Error fetching car data:", error);
-    });*/
+    });
 }
 
 function updateCar(event) {
@@ -558,6 +555,7 @@ search.addEventListener('input', () => {
     cars.forEach(car => {
         const brandRow = car.querySelector('h5');
         const modelRow = car.querySelector('p');
+        
         // This line below is useful for ensuring that the search functionality does not break.
         if (brandRow && modelRow) {
             const carBrand = brandRow.textContent.toLowerCase();

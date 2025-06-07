@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class ServicesCarDeals {
 
-    // Dependence injection for RepositoryCarDeals and RepositoryBrand.
+    // Dependence injection for RepositoryCarDealS, RepositoryBrand and RepositoryPhoto.
     private final RepositoryCarDeals repositoryCarDeals;
     private final RepositoryBrand repositoryBrand;
     private final RepositoryPhotos repositoryPhotos;
@@ -78,17 +78,18 @@ public class ServicesCarDeals {
     }
 
     public List<Car> filterCars(Brand brand, String model, Integer fabrication, Car.CarStatus status) {
-        // This function filters Cars based on brand, model, and status.
-        // It returns a list of Cars that match the given criteria.
+        // This function filters Cars based on brand, model, fabrication, and status.
+        // It returns a list of Cars that match the given criterions.
         return repositoryCarDeals.findCarsByFilters(brand, model, fabrication, status);
     }
 
     public Photo savePhoto(Photo photo) {
-        // This function...
+        // This function saves a new Photo object in the database.
         return repositoryPhotos.save(photo);
     }
 
     public Photo getPhotoById(Integer id) {
+        // This function retrieves a Photo object by ID.
         return repositoryPhotos.findById(id).orElse(null);
     }
 }
